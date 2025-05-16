@@ -1,3 +1,10 @@
+export interface User {
+	_id: string;
+	clerkId: string;
+	fullName: string;
+	imageUrl: string;
+}
+
 export interface Song {
 	_id: string;
 	title: string;
