@@ -40,47 +40,51 @@ const AlbumPage = () => {
 				className="absolute inset-0 bg-white bg-gradient-to-b from-[#5038a0]/80 via-zinc-900/80 to-zinc-900 pointer-events-none rounded-t-md"
 				aria-hidden="true"
 			/>
-			<div className="h-full relative z-10 flex flex-col gap-6">
+			<div className="h-full relative z-10 flex flex-col justify-between">
 				{/* ALBUM INFO */}
-				<div className="px-6 pt-6 h-[32.5%] flex gap-6">
+				<div className="p-6 h-[37.5%] flex gap-6">
 					<img
 						src={currentAlbum?.imageUrl}
 						alt={currentAlbum?.title}
 						className="h-full shadow-xl rounded"
 					/>
-					<div className="flex flex-col justify-end">
-						<h1 className="text-6xl font-header my-4">
-							{currentAlbum?.title}
-						</h1>
-						<div className="flex items-center gap-2 font-content text-zinc-100">
-							<span className="font-medium text-white">
-								{currentAlbum?.artist}
-							</span>
-							<span>• {currentAlbum?.songs.length} songs</span>
-							<span>• {currentAlbum?.releaseYear}</span>
+					<div className="flex-1 flex justify-between items-end">
+						<div className="flex flex-col">
+							<h1 className="text-6xl font-header my-4">
+								{currentAlbum?.title}
+							</h1>
+							<div className="flex items-center gap-2 font-content text-zinc-100">
+								<span className="font-medium text-white">
+									{currentAlbum?.artist}
+								</span>
+								<span>
+									• {currentAlbum?.songs.length} songs
+								</span>
+								<span>• {currentAlbum?.releaseYear}</span>
+							</div>
+						</div>
+						{/* PLAY BUTTON */}
+						<div className="flex items-center">
+							<Button
+								onClick={handlePlayAlbum}
+								size="icon"
+								className="size-14 rounded-full bg-green-500 hover:bg-green-400 hover:scale-105 transition-all text-white"
+							>
+								{isPlaying &&
+								currentSong &&
+								currentAlbum?.songs.some(
+									(song) => song._id === currentSong._id
+								) ? (
+									<Pause className="fill-white" />
+								) : (
+									<Play className="fill-white" />
+								)}
+							</Button>
 						</div>
 					</div>
 				</div>
-				{/* PLAY BUTTON */}
-				<div className="px-6 flex items-center">
-					<Button
-						onClick={handlePlayAlbum}
-						size="icon"
-						className="size-14 rounded-full bg-green-500 hover:bg-green-400 hover:scale-105 transition-all text-black"
-					>
-						{isPlaying &&
-						currentSong &&
-						currentAlbum?.songs.some(
-							(song) => song._id === currentSong._id
-						) ? (
-							<Pause />
-						) : (
-							<Play />
-						)}
-					</Button>
-				</div>
 				{/* TABLE SECTION */}
-				<div className="bg-black/20 backdrop-blur-sm h-[52.5%] flex flex-col">
+				<div className="bg-black/20 backdrop-blur-sm h-[56.4%] flex flex-col">
 					{/* TABLE HEADER */}
 					<div className="grid grid-cols-[28px_4fr_2fr_1fr] gap-5 px-8 py-4 text-sm text-zinc-400 border-b border-white/5 items-center font-title">
 						<div>#</div>

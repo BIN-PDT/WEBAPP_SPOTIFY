@@ -4,23 +4,41 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import OtherSection from "./components/OtherGridSection";
 import FeaturedSection from "./components/FeaturedGridSection";
 import { useMusicStore } from "@/stores/useMusicStore";
+import { usePlayerStore } from "@/stores/usePlayerStore";
 import { getGreeting } from "@/utils";
 
 const HomePage = () => {
 	const {
 		isLoading,
+		featuredSongs,
 		personalSongs,
 		trendingSongs,
 		fetchFeaturedSongs,
 		fetchPersonalSongs,
 		fetchTrendingSongs,
 	} = useMusicStore();
+	const { initializeQueue } = usePlayerStore();
 
 	useEffect(() => {
 		fetchFeaturedSongs();
 		fetchPersonalSongs();
 		fetchTrendingSongs();
 	}, []);
+
+	useEffect(() => {
+		if (
+			featuredSongs.length > 0 &&
+			personalSongs.length > 0 &&
+			trendingSongs.length > 0
+		) {
+			const allSongs = [
+				...featuredSongs,
+				...personalSongs,
+				...trendingSongs,
+			];
+			initializeQueue(allSongs);
+		}
+	}, [featuredSongs, personalSongs, trendingSongs]);
 
 	return (
 		<main className="h-full rounded-t-md overflow-hidden bg-gradient-to-b from-zinc-800 to-zinc-900">
