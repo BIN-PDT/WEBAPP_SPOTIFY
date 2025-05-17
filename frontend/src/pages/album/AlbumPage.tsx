@@ -13,7 +13,7 @@ const AlbumPage = () => {
 
 	useEffect(() => {
 		if (id) fetchAlbumById(id);
-	}, []);
+	}, [id]);
 
 	const handlePlayAlbum = () => {
 		if (!currentAlbum) return;
@@ -136,7 +136,7 @@ const AlbumPage = () => {
 											<div>{song.artist}</div>
 										</div>
 									</div>
-									{/* RELEASED YEAR */}
+									{/* RELEASED DATE */}
 									<div className="flex items-center">
 										{song.createdAt.split("T")[0]}
 									</div>

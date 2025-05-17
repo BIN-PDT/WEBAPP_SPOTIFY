@@ -38,7 +38,7 @@ const AudioPlayer = () => {
 			audioElement.currentTime = 0;
 			if (isPlaying) audioElement.play();
 		}
-	}, [currentSong]);
+	}, [isPlaying, currentSong]);
 
 	return <audio ref={audioRef} />;
 };

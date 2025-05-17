@@ -70,7 +70,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 
 		try {
 			const response = await axiosInstance.get("/songs/personal");
-			set({ featuredSongs: response.data.data });
+			set({ personalSongs: response.data.data });
 		} catch (error: any) {
 			set({ error: error.response.data.message });
 		} finally {
@@ -82,7 +82,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 
 		try {
 			const response = await axiosInstance.get("/songs/trending");
-			set({ featuredSongs: response.data.data });
+			set({ trendingSongs: response.data.data });
 		} catch (error: any) {
 			set({ error: error.response.data.message });
 		} finally {
