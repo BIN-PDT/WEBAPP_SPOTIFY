@@ -1,9 +1,12 @@
 import { PlaneTakeoff } from "lucide-react";
+import PlayButton from "./PlayButton";
 import FeaturedGridSkeleton from "@/components/skeletons/FeaturedGridSkeleton";
 import { useMusicStore } from "@/stores/useMusicStore";
+import { usePlayerStore } from "@/stores/usePlayerStore";
 
 const FeaturedSection = () => {
 	const { isLoading, featuredSongs } = useMusicStore();
+	const { handlePlay } = usePlayerStore();
 
 	if (isLoading) return <FeaturedGridSkeleton />;
 	return (
@@ -19,6 +22,7 @@ const FeaturedSection = () => {
 				featuredSongs.map((song) => (
 					<div
 						key={song._id}
+						onClick={() => handlePlay(song)}
 						className="flex items-center bg-zinc-800/50 rounded-md overflow-hidden hover:bg-zinc-700/50 transition-colors group cursor-pointer relative"
 					>
 						<img
@@ -32,6 +36,8 @@ const FeaturedSection = () => {
 								{song.artist}
 							</p>
 						</div>
+
+						<PlayButton song={song} />
 					</div>
 				))
 			)}

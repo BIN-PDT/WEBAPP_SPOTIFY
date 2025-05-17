@@ -1,7 +1,9 @@
 import type { Song } from "@/types";
 import { PlaneTakeoff } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import PlayButton from "./PlayButton";
 import OtherGridSkeleton from "@/components/skeletons/OtherGridSkeleton";
+import { usePlayerStore } from "@/stores/usePlayerStore";
 
 type OtherSectionProps = {
 	title: string;
@@ -10,6 +12,8 @@ type OtherSectionProps = {
 };
 
 const OtherSection = ({ title, isLoading, songs }: OtherSectionProps) => {
+	const { handlePlay } = usePlayerStore();
+
 	if (isLoading) return <OtherGridSkeleton />;
 	return (
 		<div className="mb-8">
@@ -36,9 +40,10 @@ const OtherSection = ({ title, isLoading, songs }: OtherSectionProps) => {
 					songs.map((song) => (
 						<div
 							key={song._id}
-							className="bg-zinc-800/40 p-4 rounded-md hover:bg-zinc-700/40 transition-all group cursor-pointer"
+							onClick={() => handlePlay(song)}
+							className="bg-zinc-800/40 p-4 rounded-md hover:bg-zinc-700/40 transition-all group cursor-pointer relative"
 						>
-							<div className="relative mb-4">
+							<div className="mb-4">
 								<div className="aspect-square rounded-md shadow-lg overflow-hidden">
 									<img
 										src={song.imageUrl}
@@ -56,6 +61,8 @@ const OtherSection = ({ title, isLoading, songs }: OtherSectionProps) => {
 									{song.artist}
 								</p>
 							</div>
+
+							<PlayButton song={song} />
 						</div>
 					))
 				)}
