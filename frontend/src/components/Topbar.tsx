@@ -7,9 +7,12 @@ import {
 } from "@clerk/clerk-react";
 import { Link } from "react-router";
 import SignInOAuthButton from "./SignInOAuthButton";
+import { buttonVariants } from "./ui/button";
+import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 const Topbar = () => {
-	const isAdmin = false;
+	const { isAdmin } = useAuthStore();
 
 	return (
 		<div className="flex items-center justify-between p-4 sticky top-0 bg-zinc-900/75 backdrop-blur-md z-10">
@@ -20,7 +23,16 @@ const Topbar = () => {
 
 			<div className="flex items-center gap-4">
 				{isAdmin && (
-					<Link to={"/admin"}>
+					<Link
+						to={"/admin"}
+						className={cn(
+							buttonVariants({
+								variant: "outline",
+								className:
+									"w-fit justify-start text-white hover:bg-zinc-800 font-title",
+							})
+						)}
+					>
 						<LayoutDashboardIcon className="size-4  mr-2" />
 						Admin Dashboard
 					</Link>
