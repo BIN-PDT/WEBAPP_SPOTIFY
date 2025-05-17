@@ -11,11 +11,13 @@ interface ChatSore {
 }
 
 export const useChatStore = create<ChatSore>((set) => ({
-	isLoading: true,
+	isLoading: false,
 	error: null,
 	users: [],
 
 	fetchUsers: async () => {
+		set({ isLoading: true, error: null });
+
 		try {
 			const response = await axiosInstance.get("/users");
 			set({ users: response.data.data });
