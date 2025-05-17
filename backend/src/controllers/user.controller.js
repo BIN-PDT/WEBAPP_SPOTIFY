@@ -7,7 +7,7 @@ export const listUsers = async (req, res, next) => {
 	} = req;
 
 	try {
-		const users = await User.find({ clerkId: { $ne: { userId } } });
+		const users = await User.find({ clerkId: { $ne: userId } });
 
 		return new APIResponse(200).setData(users).send(res);
 	} catch (error) {
