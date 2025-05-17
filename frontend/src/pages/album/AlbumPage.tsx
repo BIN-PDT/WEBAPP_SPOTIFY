@@ -1,17 +1,36 @@
-import { Clock, Play } from "lucide-react";
+import { Clock, Disc3, Pause, Play } from "lucide-react";
 import { useEffect } from "react";
 import { useParams } from "react-router";
 import { Button } from "@/components/ui/button";
 import { useMusicStore } from "@/stores/useMusicStore";
+import { usePlayerStore } from "@/stores/usePlayerStore";
 import { formatDuration } from "@/utils";
 
 const AlbumPage = () => {
 	const { id } = useParams();
 	const { isLoading, currentAlbum, fetchAlbumById } = useMusicStore();
+	const { isPlaying, currentSong, playAlbum, togglePlay } = usePlayerStore();
 
 	useEffect(() => {
 		if (id) fetchAlbumById(id);
 	}, []);
+
+	const handlePlayAlbum = () => {
+		if (!currentAlbum) return;
+
+		if (
+			currentSong &&
+			currentAlbum.songs.some((song) => song._id === currentSong._id)
+		)
+			togglePlay();
+		else playAlbum(currentAlbum.songs, 0);
+	};
+
+	const handlePlaySong = (index: number) => {
+		if (!currentAlbum) return;
+
+		playAlbum(currentAlbum.songs, index);
+	};
 
 	if (isLoading) return null;
 	return (
@@ -45,10 +64,19 @@ const AlbumPage = () => {
 				{/* PLAY BUTTON */}
 				<div className="px-6 flex items-center">
 					<Button
+						onClick={handlePlayAlbum}
 						size="icon"
-						className="size-14 rounded-full bg-green-500 hover:bg-green-400 hover:scale-105 transition-all"
+						className="size-14 rounded-full bg-green-500 hover:bg-green-400 hover:scale-105 transition-all text-black"
 					>
-						<Play className="text-black" />
+						{isPlaying &&
+						currentSong &&
+						currentAlbum?.songs.some(
+							(song) => song._id === currentSong._id
+						) ? (
+							<Pause />
+						) : (
+							<Play />
+						)}
 					</Button>
 				</div>
 				{/* TABLE SECTION */}
@@ -65,17 +93,33 @@ const AlbumPage = () => {
 					{/* TABLE CONTENT */}
 					<div className="font-content overflow-auto scrollbar-hidden">
 						{currentAlbum?.songs.map((song, index) => {
+							const isCurrentSong = song._id === currentSong?._id;
+
 							return (
 								<div
 									key={song._id}
-									className="grid grid-cols-[28px_4fr_2fr_1fr] gap-5 px-8 py-4 text-sm text-zinc-400 hover:bg-white/5 group cursor-pointer"
+									onClick={() => handlePlaySong(index)}
+									className={`grid grid-cols-[28px_4fr_2fr_1fr] gap-5 px-8 py-4 text-sm text-zinc-400 hover:bg-white/5 group cursor-pointer ${
+										isCurrentSong && "bg-white/5"
+									}`}
 								>
 									{/* ORDINAL */}
 									<div className="flex items-center">
-										<span className="group-hover:hidden">
-											{index + 1}
-										</span>
-										<Play className="size-4 hidden group-hover:block" />
+										{isCurrentSong ? (
+											<Disc3
+												className={`size-4 ${
+													isPlaying &&
+													"text-green-500 animate-spin"
+												}`}
+											/>
+										) : (
+											<span className="group-hover:hidden">
+												{index + 1}
+											</span>
+										)}
+										{!isCurrentSong && (
+											<Play className="size-4 hidden group-hover:block" />
+										)}
 									</div>
 									{/* SONG INFO */}
 									<div className="flex items-center gap-3">
