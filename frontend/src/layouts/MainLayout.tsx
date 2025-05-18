@@ -15,7 +15,7 @@ const MainLayout = () => {
 
 	useEffect(() => {
 		function checkMobile() {
-			setIsMobile(window.innerWidth < 768);
+			setIsMobile(window.innerWidth < 1024);
 		}
 
 		checkMobile();
@@ -39,21 +39,25 @@ const MainLayout = () => {
 				>
 					<LeftSidebar />
 				</ResizablePanel>
-				{/* MAIN CONTENT */}
 				<ResizableHandle className="w-2 bg-black rounded-lg transition-colors" />
+				{/* MAIN CONTENT */}
 				<ResizablePanel defaultSize={isMobile ? 80 : 60}>
 					<Outlet />
 				</ResizablePanel>
-				<ResizableHandle className="w-2 bg-black rounded-lg transition-colors" />
 				{/* RIGHT SIDEBAR */}
-				<ResizablePanel
-					defaultSize={20}
-					minSize={0}
-					maxSize={25}
-					collapsedSize={0}
-				>
-					<FriendsActivity />
-				</ResizablePanel>
+				{!isMobile && (
+					<>
+						<ResizableHandle className="w-2 bg-black rounded-lg transition-colors" />
+						<ResizablePanel
+							defaultSize={20}
+							minSize={0}
+							maxSize={20}
+							collapsedSize={0}
+						>
+							<FriendsActivity />
+						</ResizablePanel>
+					</>
+				)}
 			</ResizablePanelGroup>
 
 			<PlaybackControl />

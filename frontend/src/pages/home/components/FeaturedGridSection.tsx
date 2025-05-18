@@ -1,5 +1,5 @@
-import { PlaneTakeoff } from "lucide-react";
 import PlayButton from "./PlayButton";
+import EmptyContent from "@/components/EmptyContent";
 import FeaturedGridSkeleton from "@/components/skeletons/FeaturedGridSkeleton";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { usePlayerStore } from "@/stores/usePlayerStore";
@@ -12,12 +12,7 @@ const FeaturedSection = () => {
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
 			{featuredSongs.length === 0 ? (
-				<div className="min-h-[80px] col-span-full flex items-center justify-center gap-4">
-					<PlaneTakeoff />
-					<span className="font-title text-zinc-400">
-						See you later!
-					</span>
-				</div>
+				<EmptyContent />
 			) : (
 				featuredSongs.map((song) => (
 					<div
@@ -28,7 +23,7 @@ const FeaturedSection = () => {
 						<img
 							src={song.imageUrl}
 							alt={song.title}
-							className="size-16 sm:size-20 object-cover flex-shrink-0"
+							className="size-20 object-cover flex-shrink-0"
 						/>
 						<div className="flex-1 p-4 font-content">
 							<p className="font-medium truncate">{song.title}</p>

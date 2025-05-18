@@ -43,28 +43,14 @@ const AlbumPage = () => {
 			<div className="h-full relative z-10 flex flex-col justify-between">
 				{/* ALBUM INFO */}
 				<div className="p-6 h-[37.5%] flex gap-6">
-					<img
-						src={currentAlbum?.imageUrl}
-						alt={currentAlbum?.title}
-						className="h-full shadow-xl rounded"
-					/>
-					<div className="flex-1 flex justify-between items-end">
-						<div className="flex flex-col">
-							<h1 className="text-6xl font-header my-4">
-								{currentAlbum?.title}
-							</h1>
-							<div className="flex items-center gap-2 font-content text-zinc-100">
-								<span className="font-medium text-white">
-									{currentAlbum?.artist}
-								</span>
-								<span>
-									• {currentAlbum?.songs.length} songs
-								</span>
-								<span>• {currentAlbum?.releaseYear}</span>
-							</div>
-						</div>
+					<div className="relative">
+						<img
+							src={currentAlbum?.imageUrl}
+							alt={currentAlbum?.title}
+							className="h-full shadow-xl rounded"
+						/>
 						{/* PLAY BUTTON */}
-						<div className="flex items-center">
+						<div className="absolute left-1/2 -translate-x-1/2 bottom-0 translate-y-1/2 flex items-center">
 							<Button
 								onClick={handlePlayAlbum}
 								size="icon"
@@ -80,6 +66,19 @@ const AlbumPage = () => {
 									<Play className="fill-white" />
 								)}
 							</Button>
+						</div>
+					</div>
+
+					<div className="flex flex-col justify-end">
+						<h1 className="text-6xl font-header my-4">
+							{currentAlbum?.title}
+						</h1>
+						<div className="flex items-center gap-2 font-content text-zinc-100 truncate">
+							<span className="font-medium text-white">
+								{currentAlbum?.artist}
+							</span>
+							<span>• {currentAlbum?.songs.length} songs</span>
+							<span>• {currentAlbum?.releaseYear}</span>
 						</div>
 					</div>
 				</div>

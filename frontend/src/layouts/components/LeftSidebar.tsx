@@ -4,6 +4,7 @@ import { Link } from "react-router";
 import { SignedIn } from "@clerk/clerk-react";
 import { buttonVariants } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import EmptyContent from "@/components/EmptyContent";
 import PlaylistSkeleton from "@/components/skeletons/PlaylistSkeleton";
 import { cn } from "@/lib/utils";
 import { useMusicStore } from "@/stores/useMusicStore";
@@ -19,19 +20,19 @@ const LeftSidebar = () => {
 		<div className="h-full flex flex-col gap-2">
 			{/* NAVIGATION MENU */}
 			<div className="rounded-lg bg-zinc-900 p-4">
-				<div className="space-y-2">
+				<div className="flex md:flex-col items-center justify-center md:justify-start gap-2">
 					<Link
 						to={"/"}
 						className={cn(
 							buttonVariants({
 								variant: "ghost",
 								className:
-									"w-full justify-start text-white hover:bg-zinc-800",
+									"w-fit md:w-full justify-start text-white hover:bg-zinc-800",
 							})
 						)}
 					>
-						<HomeIcon className="mr-2 size-5" />
-						<span className="hidden md:inline font-title">
+						<HomeIcon className="!size-5" />
+						<span className="hidden md:inline ml-2 font-title">
 							Home
 						</span>
 					</Link>
@@ -43,12 +44,12 @@ const LeftSidebar = () => {
 								buttonVariants({
 									variant: "ghost",
 									className:
-										"w-full justify-start text-white hover:bg-zinc-800",
+										"w-fit md:w-full justify-start text-white hover:bg-zinc-800",
 								})
 							)}
 						>
-							<MessageCircle className="mr-2 size-5" />
-							<span className="hidden md:inline font-title">
+							<MessageCircle className="!size-5" />
+							<span className="hidden md:inline ml-2 font-title">
 								Messages
 							</span>
 						</Link>
@@ -56,31 +57,33 @@ const LeftSidebar = () => {
 				</div>
 			</div>
 			{/* LIBRARY SECTION */}
-			<div className="flex-1 rounded-lg bg-zinc-900 p-4">
-				<div className="flex items-center justify-between mb-4">
-					<div className="flex items-center text-white px-2">
-						<Library className="size-5 mr-2" />
-						<span className="hidden md:inline font-title">
+			<div className="flex-1 rounded-lg bg-zinc-900">
+				<div className="p-4 border-b border-zinc-800">
+					<div className="flex items-center justify-center text-white px-2">
+						<Library className="!size-5" />
+						<span className="hidden md:inline ml-2 font-title">
 							Playlists
 						</span>
 					</div>
 				</div>
 
-				<ScrollArea className="h-[calc(100vh-300px)]">
-					<div className="space-y-2">
-						{isLoading ? (
-							<PlaylistSkeleton />
-						) : (
-							albums.map((album) => (
+				{isLoading ? (
+					<PlaylistSkeleton />
+				) : albums.length === 0 ? (
+					<EmptyContent />
+				) : (
+					<ScrollArea className="h-[calc(100vh-270px)] md:h-[calc(100vh-320px)] px-4 my-4">
+						<div className="space-y-2">
+							{albums.map((album) => (
 								<Link
 									to={`/albums/${album._id}`}
 									key={album._id}
-									className="mr-4 p-2 hover:bg-zinc-800 rounded-md flex items-start gap-4 group cursor-pointer"
+									className="p-2 hover:bg-zinc-800 rounded-md flex items-start gap-4 group cursor-pointer"
 								>
 									<img
 										src={album.imageUrl}
 										alt="Playlist img"
-										className="size-12 rounded-md flex-shrink-0 object-cover"
+										className="size-full md:size-12 rounded-md flex-shrink-0 object-cover"
 									/>
 
 									<div className="flex-1 min-w-0 hidden md:block font-content">
@@ -92,10 +95,10 @@ const LeftSidebar = () => {
 										</p>
 									</div>
 								</Link>
-							))
-						)}
-					</div>
-				</ScrollArea>
+							))}
+						</div>
+					</ScrollArea>
+				)}
 			</div>
 		</div>
 	);

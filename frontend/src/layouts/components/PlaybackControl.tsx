@@ -1,7 +1,4 @@
 import {
-	Laptop2,
-	ListMusic,
-	Mic2,
 	Pause,
 	Play,
 	Repeat,
@@ -52,10 +49,10 @@ const PlaybackControl = () => {
 	}, [currentSong]);
 
 	return (
-		<footer className="mx-2 px-4 h-20 sm:h-24 bg-zinc-900 border-t border-zinc-800 rounded-t-md">
+		<footer className="h-24 mx-2 px-4 bg-zinc-900 border-t border-zinc-800 rounded-t-md">
 			<div className="flex items-center justify-between h-full max-w-[1800px] mx-auto">
 				{/* SONG INFO */}
-				<div className="hidden sm:flex items-center gap-4 min-w-[180px] w-[30%]">
+				<div className="hidden sm:flex items-center gap-4 min-w-[150px] w-[27.5%] justify-start">
 					{currentSong && (
 						<>
 							<img
@@ -76,7 +73,7 @@ const PlaybackControl = () => {
 				</div>
 				{/* PLAYER CONTROLS */}
 				<div className="flex flex-col items-center gap-3 flex-1 max-w-full sm:max-w-[45%]">
-					<div className="flex items-center gap-4 sm:gap-6">
+					<div className="flex items-center gap-4 sm:gap-5">
 						<Button
 							size="icon"
 							variant="ghost"
@@ -142,29 +139,7 @@ const PlaybackControl = () => {
 					</div>
 				</div>
 				{/* VOLUME CONTROLS */}
-				<div className="hidden sm:flex items-center gap-4 min-w-[180px] w-[30%] justify-end">
-					<Button
-						size="icon"
-						variant="ghost"
-						className="hover:text-white text-zinc-400"
-					>
-						<Mic2 />
-					</Button>
-					<Button
-						size="icon"
-						variant="ghost"
-						className="hover:text-white text-zinc-400"
-					>
-						<ListMusic />
-					</Button>
-					<Button
-						size="icon"
-						variant="ghost"
-						className="hover:text-white text-zinc-400"
-					>
-						<Laptop2 />
-					</Button>
-
+				<div className="hidden sm:flex items-center gap-4 min-w-[150px] w-[27.5%] justify-end">
 					<div className="flex items-center gap-2">
 						<Button
 							size="icon"

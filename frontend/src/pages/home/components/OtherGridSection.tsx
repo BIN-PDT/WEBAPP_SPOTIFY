@@ -1,7 +1,7 @@
 import type { Song } from "@/types";
-import { PlaneTakeoff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PlayButton from "./PlayButton";
+import EmptyContent from "@/components/EmptyContent";
 import OtherGridSkeleton from "@/components/skeletons/OtherGridSkeleton";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 
@@ -30,12 +30,7 @@ const OtherSection = ({ title, isLoading, songs }: OtherSectionProps) => {
 			{/* CONTENT */}
 			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 				{songs.length === 0 ? (
-					<div className="min-h-[80px] col-span-full flex items-center justify-center gap-4">
-						<PlaneTakeoff />
-						<span className="font-title text-zinc-400">
-							See you later!
-						</span>
-					</div>
+					<EmptyContent />
 				) : (
 					songs.map((song) => (
 						<div
