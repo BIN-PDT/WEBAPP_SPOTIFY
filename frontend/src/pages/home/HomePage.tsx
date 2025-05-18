@@ -20,25 +20,18 @@ const HomePage = () => {
 	const { initializeQueue } = usePlayerStore();
 
 	useEffect(() => {
-		fetchFeaturedSongs();
-		fetchPersonalSongs();
-		fetchTrendingSongs();
+		const abortController = new AbortController();
+
+		fetchFeaturedSongs(abortController.signal);
+		fetchPersonalSongs(abortController.signal);
+		fetchTrendingSongs(abortController.signal);
+
+		return () => abortController.abort();
 	}, []);
 
 	useEffect(() => {
-		if (
-			featuredSongs.length > 0 &&
-			personalSongs.length > 0 &&
-			trendingSongs.length > 0
-		) {
-			const allSongs = [
-				...featuredSongs,
-				...personalSongs,
-				...trendingSongs,
-			];
-			initializeQueue(allSongs);
-		}
-	}, [featuredSongs, personalSongs, trendingSongs]);
+		if (featuredSongs.length > 0) initializeQueue(featuredSongs);
+	}, [featuredSongs]);
 
 	return (
 		<main className="h-full rounded-t-md overflow-hidden bg-gradient-to-b from-zinc-800 to-zinc-900">

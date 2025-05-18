@@ -23,11 +23,10 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
 	currentIndex: -1,
 
 	initializeQueue: (songs) => {
-		set({
-			queue: songs,
-			currentSong: get().currentSong || songs[0],
-			currentIndex: get().currentIndex === -1 ? 0 : get().currentIndex,
-		});
+		if (get().queue.length > 0) return;
+
+		const newQueue = [...songs];
+		set({ queue: newQueue, currentSong: newQueue[0], currentIndex: 0 });
 	},
 	playAlbum: (songs, startIndex = 0) => {
 		if (songs.length === 0) return;

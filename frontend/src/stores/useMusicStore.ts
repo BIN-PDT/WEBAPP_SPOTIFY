@@ -14,9 +14,9 @@ interface MusicStore {
 
 	fetchAlbums: () => Promise<void>;
 	fetchAlbumById: (id: string) => Promise<void>;
-	fetchFeaturedSongs: () => Promise<void>;
-	fetchPersonalSongs: () => Promise<void>;
-	fetchTrendingSongs: () => Promise<void>;
+	fetchFeaturedSongs: (signal: AbortSignal) => Promise<void>;
+	fetchPersonalSongs: (signal: AbortSignal) => Promise<void>;
+	fetchTrendingSongs: (signal: AbortSignal) => Promise<void>;
 }
 
 export const useMusicStore = create<MusicStore>((set) => ({
@@ -53,38 +53,44 @@ export const useMusicStore = create<MusicStore>((set) => ({
 			set({ isLoading: false });
 		}
 	},
-	fetchFeaturedSongs: async () => {
+	fetchFeaturedSongs: async (signal) => {
 		set({ isLoading: true, error: null });
 
 		try {
-			const response = await axiosInstance.get("/songs/featured");
+			const response = await axiosInstance.get("/songs/featured", {
+				signal,
+			});
 			set({ featuredSongs: response.data.data });
 		} catch (error: any) {
-			set({ error: error.response.data.message });
+			set({ error: error.response?.data.message });
 		} finally {
 			set({ isLoading: false });
 		}
 	},
-	fetchPersonalSongs: async () => {
+	fetchPersonalSongs: async (signal) => {
 		set({ isLoading: true, error: null });
 
 		try {
-			const response = await axiosInstance.get("/songs/personal");
+			const response = await axiosInstance.get("/songs/personal", {
+				signal,
+			});
 			set({ personalSongs: response.data.data });
 		} catch (error: any) {
-			set({ error: error.response.data.message });
+			set({ error: error.response?.data.message });
 		} finally {
 			set({ isLoading: false });
 		}
 	},
-	fetchTrendingSongs: async () => {
+	fetchTrendingSongs: async (signal) => {
 		set({ isLoading: true, error: null });
 
 		try {
-			const response = await axiosInstance.get("/songs/trending");
+			const response = await axiosInstance.get("/songs/trending", {
+				signal,
+			});
 			set({ trendingSongs: response.data.data });
 		} catch (error: any) {
-			set({ error: error.response.data.message });
+			set({ error: error.response?.data.message });
 		} finally {
 			set({ isLoading: false });
 		}
