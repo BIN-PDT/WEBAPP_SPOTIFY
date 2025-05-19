@@ -8,9 +8,11 @@ import EmptyContent from "@/components/EmptyContent";
 import PlaylistSkeleton from "@/components/skeletons/PlaylistSkeleton";
 import { cn } from "@/lib/utils";
 import { useMusicStore } from "@/stores/useMusicStore";
+import { usePlayerStore } from "@/stores/usePlayerStore";
 
 const LeftSidebar = () => {
 	const { isLoading, albums, fetchAlbums } = useMusicStore();
+	const { playedAlbumId } = usePlayerStore();
 
 	useEffect(() => {
 		fetchAlbums();
@@ -78,7 +80,10 @@ const LeftSidebar = () => {
 								<Link
 									to={`/albums/${album._id}`}
 									key={album._id}
-									className="p-2 hover:bg-zinc-800 rounded-md flex items-start gap-4 group cursor-pointer"
+									className={`p-2 hover:bg-zinc-800 rounded-md flex items-start gap-4 group cursor-pointer ${
+										playedAlbumId === album._id &&
+										"bg-zinc-800"
+									}`}
 								>
 									<img
 										src={album.imageUrl}

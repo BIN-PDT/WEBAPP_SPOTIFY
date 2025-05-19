@@ -8,6 +8,7 @@ interface PlayerStore {
 	isPlaying: boolean;
 	currentSong: Song | null;
 	currentIndex: number;
+	playedAlbumId: string | null;
 	isRepeated: boolean;
 	isShuffled: boolean;
 
@@ -28,6 +29,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
 	isPlaying: false,
 	currentSong: null,
 	currentIndex: -1,
+	playedAlbumId: null,
 	isRepeated: false,
 	isShuffled: false,
 
@@ -41,6 +43,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
 			originalSongs: newQueue,
 			currentSong: newQueue[0],
 			currentIndex: 0,
+			playedAlbumId: null,
 		});
 		shuffleSongs();
 	},
@@ -55,6 +58,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
 			currentSong: newQueue[startIndex],
 			currentIndex: startIndex,
 			isPlaying: true,
+			playedAlbumId: null,
 		});
 		shuffleSongs();
 	},
@@ -65,6 +69,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
 			currentSong: song,
 			currentIndex: -1,
 			isPlaying: true,
+			playedAlbumId: null,
 			isShuffled: false,
 		});
 	},

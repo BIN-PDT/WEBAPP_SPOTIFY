@@ -9,7 +9,8 @@ import { formatDuration } from "@/utils";
 const AlbumPage = () => {
 	const { id } = useParams();
 	const { isLoading, currentAlbum, fetchAlbumById } = useMusicStore();
-	const { isPlaying, currentSong, playAlbum, togglePlay } = usePlayerStore();
+	const { isPlaying, currentSong, playedAlbumId, playAlbum, togglePlay } =
+		usePlayerStore();
 
 	useEffect(() => {
 		if (id) fetchAlbumById(id);
@@ -19,17 +20,22 @@ const AlbumPage = () => {
 		if (!currentAlbum) return;
 
 		if (
+			playedAlbumId == currentAlbum._id &&
 			currentSong &&
 			currentAlbum.songs.some((song) => song._id === currentSong._id)
 		)
 			togglePlay();
-		else playAlbum(currentAlbum.songs, 0);
+		else {
+			playAlbum(currentAlbum.songs, 0);
+			usePlayerStore.setState({ playedAlbumId: currentAlbum._id });
+		}
 	};
 
 	const handlePlaySong = (index: number) => {
 		if (!currentAlbum) return;
 
 		playAlbum(currentAlbum.songs, index);
+		usePlayerStore.setState({ playedAlbumId: currentAlbum._id });
 	};
 
 	if (isLoading) return null;
@@ -56,7 +62,9 @@ const AlbumPage = () => {
 								size="icon"
 								className="size-14 rounded-full bg-green-500 hover:bg-green-400 hover:scale-105 transition-all text-white"
 							>
-								{isPlaying &&
+								{currentAlbum &&
+								playedAlbumId === currentAlbum._id &&
+								isPlaying &&
 								currentSong &&
 								currentAlbum?.songs.some(
 									(song) => song._id === currentSong._id
@@ -103,12 +111,17 @@ const AlbumPage = () => {
 									key={song._id}
 									onClick={() => handlePlaySong(index)}
 									className={`grid grid-cols-[28px_4fr_2fr_1fr] gap-5 px-8 py-4 text-sm text-zinc-400 hover:bg-white/5 group cursor-pointer ${
-										isCurrentSong && "bg-white/5"
+										currentAlbum &&
+										playedAlbumId === currentAlbum._id &&
+										isCurrentSong &&
+										"bg-white/5"
 									}`}
 								>
 									{/* ORDINAL */}
 									<div className="flex items-center">
-										{isCurrentSong ? (
+										{currentAlbum &&
+										playedAlbumId === currentAlbum._id &&
+										isCurrentSong ? (
 											<Disc3
 												className={`size-4 ${
 													isPlaying &&
