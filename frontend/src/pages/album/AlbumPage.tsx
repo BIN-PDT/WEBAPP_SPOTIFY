@@ -1,5 +1,5 @@
 import { Clock, Disc3, Pause, Play } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Button } from "@/components/ui/button";
 import { useMusicStore } from "@/stores/useMusicStore";
@@ -8,6 +8,7 @@ import { formatDuration } from "@/utils";
 
 const AlbumPage = () => {
 	const { id } = useParams();
+	const [isPlayed, setIsPlayed] = useState(false);
 	const { isLoading, currentAlbum, fetchAlbumById } = useMusicStore();
 	const { isPlaying, currentSong, playedAlbumId, playAlbum, togglePlay } =
 		usePlayerStore();
@@ -16,15 +17,15 @@ const AlbumPage = () => {
 		if (id) fetchAlbumById(id);
 	}, [id]);
 
+	useEffect(() => {
+		if (!currentAlbum) setIsPlayed(false);
+		else setIsPlayed(currentAlbum._id === playedAlbumId);
+	}, [currentAlbum, playedAlbumId]);
+
 	const handlePlayAlbum = () => {
 		if (!currentAlbum) return;
 
-		if (
-			playedAlbumId == currentAlbum._id &&
-			currentSong &&
-			currentAlbum.songs.some((song) => song._id === currentSong._id)
-		)
-			togglePlay();
+		if (isPlayed) togglePlay();
 		else {
 			playAlbum(currentAlbum.songs, 0);
 			usePlayerStore.setState({ playedAlbumId: currentAlbum._id });
@@ -62,13 +63,7 @@ const AlbumPage = () => {
 								size="icon"
 								className="size-14 rounded-full bg-green-500 hover:bg-green-400 hover:scale-105 transition-all text-white"
 							>
-								{currentAlbum &&
-								playedAlbumId === currentAlbum._id &&
-								isPlaying &&
-								currentSong &&
-								currentAlbum?.songs.some(
-									(song) => song._id === currentSong._id
-								) ? (
+								{isPlayed && isPlaying ? (
 									<Pause className="fill-white" />
 								) : (
 									<Play className="fill-white" />
@@ -119,9 +114,7 @@ const AlbumPage = () => {
 								>
 									{/* ORDINAL */}
 									<div className="flex items-center">
-										{currentAlbum &&
-										playedAlbumId === currentAlbum._id &&
-										isCurrentSong ? (
+										{isPlayed && isCurrentSong ? (
 											<Disc3
 												className={`size-4 ${
 													isPlaying &&
