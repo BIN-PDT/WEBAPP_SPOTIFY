@@ -12,7 +12,7 @@ type OtherSectionProps = {
 };
 
 const OtherSection = ({ title, isLoading, songs }: OtherSectionProps) => {
-	const { handlePlay } = usePlayerStore();
+	const { playSong, playAlbum } = usePlayerStore();
 
 	if (isLoading) return <OtherGridSkeleton />;
 	return (
@@ -21,10 +21,11 @@ const OtherSection = ({ title, isLoading, songs }: OtherSectionProps) => {
 			<div className="flex items-center justify-between mb-4 font-title">
 				<h2 className="text-lg sm:text-xl font-bold">{title}</h2>
 				<Button
-					variant="link"
+					onClick={() => playAlbum(songs)}
+					variant="ghost"
 					className="text-sm text-zinc-400 hover:text-white"
 				>
-					Show all
+					Play All
 				</Button>
 			</div>
 			{/* CONTENT */}
@@ -35,7 +36,7 @@ const OtherSection = ({ title, isLoading, songs }: OtherSectionProps) => {
 					songs.map((song) => (
 						<div
 							key={song._id}
-							onClick={() => handlePlay(song)}
+							onClick={() => playSong(song)}
 							className="bg-zinc-800/40 p-4 rounded-md hover:bg-zinc-700/40 transition-all group cursor-pointer relative"
 						>
 							<div className="mb-4">

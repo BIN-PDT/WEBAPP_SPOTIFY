@@ -6,7 +6,7 @@ import { usePlayerStore } from "@/stores/usePlayerStore";
 
 const FeaturedSection = () => {
 	const { isLoading, featuredSongs } = useMusicStore();
-	const { handlePlay } = usePlayerStore();
+	const { playAlbum } = usePlayerStore();
 
 	if (isLoading) return <FeaturedGridSkeleton />;
 	return (
@@ -14,10 +14,10 @@ const FeaturedSection = () => {
 			{featuredSongs.length === 0 ? (
 				<EmptyContent />
 			) : (
-				featuredSongs.map((song) => (
+				featuredSongs.map((song, index) => (
 					<div
 						key={song._id}
-						onClick={() => handlePlay(song)}
+						onClick={() => playAlbum(featuredSongs, index)}
 						className="flex items-center bg-zinc-800/50 rounded-md overflow-hidden hover:bg-zinc-700/50 transition-colors group cursor-pointer relative"
 					>
 						<img
