@@ -16,8 +16,19 @@ import { Button } from "@/components/ui/button";
 import { formatDuration } from "@/utils";
 
 const PlaybackControl = () => {
-	const { isPlaying, currentSong, togglePlay, playNext, playPrevious } =
-		usePlayerStore();
+	const {
+		queue,
+		isPlaying,
+		currentSong,
+		currentIndex,
+		isRepeated,
+		isShuffled,
+		togglePlay,
+		playNext,
+		playPrev,
+		toggleRepeat,
+		toggleShuffle,
+	} = usePlayerStore();
 
 	const [volume, setVolume] = useState(75);
 	const [currentTime, setCurrentTime] = useState(0);
@@ -35,16 +46,13 @@ const PlaybackControl = () => {
 
 		const updateTime = () => setCurrentTime(audioElement.currentTime);
 		const updateDuration = () => setDuration(audioElement.duration);
-		const handleEnded = () => usePlayerStore.setState({ isPlaying: false });
 
 		audioElement.addEventListener("timeupdate", updateTime);
 		audioElement.addEventListener("loadedmetadata", updateDuration);
-		audioElement.addEventListener("ended", handleEnded);
 
 		return () => {
 			audioElement.removeEventListener("timeupdate", updateTime);
 			audioElement.removeEventListener("loadedmetadata", updateDuration);
-			audioElement.removeEventListener("ended", handleEnded);
 		};
 	}, [currentSong]);
 
@@ -74,24 +82,27 @@ const PlaybackControl = () => {
 				{/* PLAYER CONTROLS */}
 				<div className="flex flex-col items-center gap-3 flex-1 max-w-full sm:max-w-[45%]">
 					<div className="flex items-center gap-4 sm:gap-5">
+						{/* TOGGLE SHUFFLE */}
 						<Button
 							size="icon"
-							variant="ghost"
+							variant={isShuffled ? "outline" : "ghost"}
 							className="hidden sm:inline-flex hover:text-white text-zinc-400"
+							onClick={toggleShuffle}
+							disabled={queue.length === 0}
 						>
 							<Shuffle />
 						</Button>
-
+						{/* PLAY PREVIOUS */}
 						<Button
 							size="icon"
 							variant="ghost"
 							className="hover:text-white text-zinc-400"
-							onClick={playPrevious}
-							disabled={!currentSong}
+							onClick={() => playPrev(audioRef.current)}
+							disabled={queue.length === 0 || currentIndex === 0}
 						>
 							<SkipBack />
 						</Button>
-
+						{/* TOGGLE PLAY */}
 						<Button
 							size="icon"
 							className="size-8 rounded-full text-white"
@@ -104,19 +115,25 @@ const PlaybackControl = () => {
 								<Play className="fill-white" />
 							)}
 						</Button>
+						{/* PLAY NEXT */}
 						<Button
 							size="icon"
 							variant="ghost"
 							className="hover:text-white text-zinc-400"
-							onClick={playNext}
-							disabled={!currentSong}
+							onClick={() => playNext(audioRef.current)}
+							disabled={
+								queue.length === 0 ||
+								currentIndex === queue.length - 1
+							}
 						>
 							<SkipForward />
 						</Button>
+						{/* TOGGLE REPEAT */}
 						<Button
 							size="icon"
-							variant="ghost"
+							variant={isRepeated ? "outline" : "ghost"}
 							className="hidden sm:inline-flex hover:text-white text-zinc-400"
+							onClick={toggleRepeat}
 						>
 							<Repeat />
 						</Button>
@@ -140,6 +157,7 @@ const PlaybackControl = () => {
 				</div>
 				{/* VOLUME CONTROLS */}
 				<div className="hidden sm:flex items-center gap-4 min-w-[150px] w-[27.5%] justify-end">
+					{/* ADJUST SPEAKER */}
 					<div className="flex items-center gap-2">
 						<Button
 							size="icon"

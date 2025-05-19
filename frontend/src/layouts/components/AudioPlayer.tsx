@@ -20,7 +20,7 @@ const AudioPlayer = () => {
 		if (!audioElement) return;
 
 		function handleEnded() {
-			playNext();
+			playNext(audioRef.current);
 		}
 
 		audioElement.addEventListener("ended", handleEnded);
