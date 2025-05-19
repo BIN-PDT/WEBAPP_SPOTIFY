@@ -4,12 +4,12 @@ export function formatDuration(seconds: number) {
 	return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
 }
 
-export function getGreeting() {
+export function getGreeting(): [number, string] {
 	const hour = new Date().getHours();
-	if (hour >= 5 && hour < 12) return "Good Morning";
-	if (hour >= 12 && hour < 18) return "Good Afternoon";
-	if (hour >= 18 && hour < 22) return "Good Evening";
-	return "Good Night";
+	if (hour >= 5 && hour < 12) return [1, "Good Morning"];
+	if (hour >= 12 && hour < 18) return [2, "Good Afternoon"];
+	if (hour >= 18 && hour < 22) return [3, "Good Evening"];
+	return [4, "Good Night"];
 }
 
 export function shuffle(items: any[]) {

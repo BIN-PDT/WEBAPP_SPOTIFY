@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import Topbar from "@/components/Topbar";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import Greeting from "./components/Greeting";
 import OtherSection from "./components/OtherGridSection";
 import FeaturedSection from "./components/FeaturedGridSection";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { usePlayerStore } from "@/stores/usePlayerStore";
-import { getGreeting } from "@/utils";
 
 const HomePage = () => {
 	const {
@@ -38,9 +38,7 @@ const HomePage = () => {
 			<Topbar />
 			<ScrollArea className="h-[calc(100vh-180px)]">
 				<div className="p-4 sm:p-6">
-					<h1 className="text-2xl sm:text-3xl font-header mb-6">
-						{getGreeting()}
-					</h1>
+					<Greeting />
 					<FeaturedSection />
 
 					<div className="space-y-8">
