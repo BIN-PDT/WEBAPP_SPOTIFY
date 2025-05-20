@@ -1,4 +1,5 @@
 import { CloudMoon, CloudSun, Moon, Sun } from "lucide-react";
+import toast from "react-hot-toast";
 
 export function formatDuration(seconds: number) {
 	const minutes = Math.floor(seconds / 60);
@@ -21,4 +22,12 @@ export function shuffle(items: any[]) {
 		[array[i], array[j]] = [array[j], array[i]];
 	}
 	return array;
+}
+
+export function toastSuccess(message: string) {
+	toast.success(message, { className: "font-title" });
+}
+
+export function toastError(message: string) {
+	toast.error(message, { className: "font-title" });
 }

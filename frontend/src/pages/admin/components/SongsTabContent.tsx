@@ -1,5 +1,37 @@
+import { Music } from "lucide-react";
+import SongsTable from "./SongTable";
+import AddSongDialog from "./AddSongDialog";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+
 const SongsTabContent = () => {
-	return <div></div>;
+	return (
+		<Card>
+			<CardHeader>
+				<div className="flex items-center justify-between">
+					<div>
+						<CardTitle className="flex items-center gap-2 font-title font-normal">
+							<Music className="size-5 text-emerald-500" />
+							Songs Library
+						</CardTitle>
+						<CardDescription className="font-content italic">
+							Manage your music tracks
+						</CardDescription>
+					</div>
+					<AddSongDialog />
+				</div>
+			</CardHeader>
+
+			<CardContent>
+				<SongsTable />
+			</CardContent>
+		</Card>
+	);
 };
 
 export default SongsTabContent;

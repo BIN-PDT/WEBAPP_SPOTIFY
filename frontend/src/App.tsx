@@ -6,6 +6,7 @@ import HomePage from "./pages/home/HomePage";
 import ChatPage from "./pages/chat/ChatPage";
 import AlbumPage from "./pages/album/AlbumPage";
 import AdminPage from "./pages/admin/AdminPage";
+import { Toaster } from "react-hot-toast";
 
 function App() {
 	return (
@@ -28,6 +29,8 @@ function App() {
 					<Route path="/albums/:id" element={<AlbumPage />} />
 				</Route>
 			</Routes>
+
+			<Toaster />
 		</>
 	);
 }
