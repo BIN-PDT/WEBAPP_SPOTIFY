@@ -123,7 +123,7 @@ const AddSongDialog = () => {
 						Add New Song
 					</DialogTitle>
 					<DialogDescription className="font-content italic">
-						Add a new song to your music library
+						Add a new song to your song collection
 					</DialogDescription>
 				</DialogHeader>
 

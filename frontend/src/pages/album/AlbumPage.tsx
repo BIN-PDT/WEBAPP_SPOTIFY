@@ -57,19 +57,21 @@ const AlbumPage = () => {
 							className="h-full shadow-xl rounded"
 						/>
 						{/* PLAY BUTTON */}
-						<div className="absolute left-1/2 -translate-x-1/2 bottom-0 translate-y-1/2 flex items-center">
-							<Button
-								onClick={handlePlayAlbum}
-								size="icon"
-								className="size-14 rounded-full bg-green-500 hover:bg-green-400 hover:scale-105 transition-all text-white"
-							>
-								{isPlayed && isPlaying ? (
-									<Pause className="fill-white" />
-								) : (
-									<Play className="fill-white" />
-								)}
-							</Button>
-						</div>
+						{currentAlbum && currentAlbum.songs.length > 0 && (
+							<div className="absolute left-1/2 -translate-x-1/2 bottom-0 translate-y-1/2 flex items-center">
+								<Button
+									onClick={handlePlayAlbum}
+									size="icon"
+									className="size-14 rounded-full bg-green-500 hover:bg-green-400 hover:scale-105 transition-all text-white"
+								>
+									{isPlayed && isPlaying ? (
+										<Pause className="fill-white" />
+									) : (
+										<Play className="fill-white" />
+									)}
+								</Button>
+							</div>
+						)}
 					</div>
 
 					<div className="flex flex-col justify-end">

@@ -1,6 +1,6 @@
-import { Music } from "lucide-react";
-import SongsTable from "./SongTable";
-import AddSongDialog from "./AddSongDialog";
+import { Library } from "lucide-react";
+import AlbumsTable from "./AlbumsTable";
+import AddAlbumDialog from "./AddAlbumDialog";
 import {
 	Card,
 	CardContent,
@@ -9,29 +9,29 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 
-const SongsTabContent = () => {
+const AlbumsTabContent = () => {
 	return (
 		<Card>
 			<CardHeader>
 				<div className="flex items-center justify-between">
 					<div>
 						<CardTitle className="flex items-center gap-2 font-title font-normal">
-							<Music className="size-5 text-emerald-500" />
-							Songs Library
+							<Library className="size-5 text-violet-500" />
+							Album Collection
 						</CardTitle>
 						<CardDescription className="font-content italic">
-							Manage your music tracks
+							Manage your album collection
 						</CardDescription>
 					</div>
-					<AddSongDialog />
+					<AddAlbumDialog />
 				</div>
 			</CardHeader>
 
 			<CardContent>
-				<SongsTable />
+				<AlbumsTable />
 			</CardContent>
 		</Card>
 	);
 };
 
-export default SongsTabContent;
+export default AlbumsTabContent;

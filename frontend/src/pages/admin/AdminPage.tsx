@@ -1,11 +1,11 @@
-import { Album, Music } from "lucide-react";
+import { Library, ListMusic } from "lucide-react";
 import { useEffect } from "react";
 import Header from "./components/Header";
 import AdminLoader from "./components/AdminLoader";
 import Unauthorized from "./components/Unauthorized";
 import DashboardStats from "./components/DashboardStats";
-import SongsTabContent from "./components/SongsTabContent";
-import AlbumsTabContent from "./components/AlbumsTabContent";
+import SongsTabContent from "./components/song/SongsTabContent";
+import AlbumsTabContent from "./components/album/AlbumsTabContent";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useMusicStore } from "@/stores/useMusicStore";
@@ -33,14 +33,14 @@ const AdminPage = () => {
 						value="songs"
 						className="data-[state=active]:bg-zinc-700"
 					>
-						<Music className="mr-2 size-4" />
+						<ListMusic className="mr-2 size-4" />
 						Songs
 					</TabsTrigger>
 					<TabsTrigger
 						value="albums"
 						className="data-[state=active]:bg-zinc-700"
 					>
-						<Album className="mr-2 size-4" />
+						<Library className="mr-2 size-4" />
 						Albums
 					</TabsTrigger>
 				</TabsList>
