@@ -1,15 +1,17 @@
+import { CloudMoon, CloudSun, Moon, Sun } from "lucide-react";
+
 export function formatDuration(seconds: number) {
 	const minutes = Math.floor(seconds / 60);
 	const remainingSeconds = Math.floor(seconds % 60);
 	return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
 }
 
-export function getGreeting(): [number, string] {
+export function getGreeting(): [React.ElementType, string] {
 	const hour = new Date().getHours();
-	if (hour >= 5 && hour < 12) return [1, "Good Morning"];
-	if (hour >= 12 && hour < 18) return [2, "Good Afternoon"];
-	if (hour >= 18 && hour < 22) return [3, "Good Evening"];
-	return [4, "Good Night"];
+	if (hour >= 5 && hour < 12) return [Sun, "Good Morning"];
+	if (hour >= 12 && hour < 18) return [CloudSun, "Good Afternoon"];
+	if (hour >= 18 && hour < 22) return [CloudMoon, "Good Evening"];
+	return [Moon, "Good Night"];
 }
 
 export function shuffle(items: any[]) {
