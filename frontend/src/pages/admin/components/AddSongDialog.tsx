@@ -41,6 +41,7 @@ const AddSongDialog = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const audioInputRef = useRef<HTMLInputElement>(null);
 	const imageInputRef = useRef<HTMLInputElement>(null);
+	const imageSrcRef = useRef<string>("");
 
 	const [data, setData] = useState<SongInfo>({
 		title: "",
@@ -49,6 +50,29 @@ const AddSongDialog = () => {
 		duration: "0",
 	});
 	const [files, setFiles] = useState<SongFiles>({ audio: null, image: null });
+
+	const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files![0];
+
+		setFiles({ ...files, image: file || null });
+		imageSrcRef.current = file ? URL.createObjectURL(file) : "";
+	};
+
+	const handleAudioUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files![0];
+
+		if (file) {
+			const audio = new Audio(URL.createObjectURL(file));
+			audio.onloadedmetadata = function () {
+				const duration = Math.ceil(audio.duration);
+				setData({ ...data, duration: duration.toString() });
+				setFiles({ ...files, audio: file });
+			};
+		} else {
+			setData({ ...data, duration: "0" });
+			setFiles({ ...files, audio: null });
+		}
+	};
 
 	const handleSubmit = async () => {
 		setIsLoading(true);
@@ -106,43 +130,35 @@ const AddSongDialog = () => {
 				<div className="space-y-4 py-4">
 					<input
 						type="file"
-						accept="audio/*"
-						ref={audioInputRef}
-						hidden
-						onChange={(e) =>
-							setFiles((prev) => ({
-								...prev,
-								audio: e.target.files![0],
-							}))
-						}
-					/>
-					<input
-						type="file"
 						accept="image/*"
 						hidden
 						ref={imageInputRef}
-						onChange={(e) =>
-							setFiles((prev) => ({
-								...prev,
-								image: e.target.files![0],
-							}))
-						}
+						onChange={handleImageUpload}
+					/>
+					<input
+						type="file"
+						accept="audio/*"
+						hidden
+						ref={audioInputRef}
+						onChange={handleAudioUpload}
 					/>
 					{/* IMAGE UPLOAD AREA */}
 					<div
-						className="flex items-center justify-center p-6 border-2 border-dashed border-zinc-700 rounded-lg cursor-pointer"
+						className="min-h-44 flex items-center justify-center p-6 border-2 border-dashed border-zinc-700 rounded-lg cursor-pointer"
 						onClick={() => imageInputRef.current?.click()}
 					>
 						<div className="text-center">
 							{files.image ? (
-								<div className="space-y-2">
-									<div className="text-sm text-emerald-500 font-title">
-										Image selected
-									</div>
-									<div className="text-xs text-zinc-400 font-content">
-										{files.image.name.slice(0, 20)}
-									</div>
-								</div>
+								<>
+									<img
+										title={files.image.name}
+										src={imageSrcRef.current}
+										className="size-24 rounded-md"
+									/>
+									<p className="mt-2 text-white text-sm font-title translate-y-1/2">
+										{files.image.name}
+									</p>
+								</>
 							) : (
 								<>
 									<div className="p-3 bg-zinc-800 rounded-full inline-block mb-2">
@@ -175,6 +191,20 @@ const AddSongDialog = () => {
 								: "Choose File"}
 						</Button>
 					</div>
+					{/* DURATION FIELD */}
+					<div className="space-y-2">
+						<label className="font-title">
+							Duration{" "}
+							<span className="text-sm font-content italic">
+								(seconds)
+							</span>
+						</label>
+						<Input
+							readOnly
+							value={data.duration}
+							className="bg-zinc-800 border-zinc-700 font-content"
+						/>
+					</div>
 					{/* TITLE FIELD */}
 					<div className="space-y-2">
 						<label className="font-title">Title</label>
@@ -193,27 +223,6 @@ const AddSongDialog = () => {
 							value={data.artist}
 							onChange={(e) =>
 								setData({ ...data, artist: e.target.value })
-							}
-							className="bg-zinc-800 border-zinc-700 font-content"
-						/>
-					</div>
-					{/* DURATION FIELD */}
-					<div className="space-y-2">
-						<label className="font-title">
-							Duration{" "}
-							<span className="text-sm font-content italic">
-								(seconds)
-							</span>
-						</label>
-						<Input
-							type="number"
-							min="0"
-							value={data.duration}
-							onChange={(e) =>
-								setData({
-									...data,
-									duration: e.target.value || "0",
-								})
 							}
 							className="bg-zinc-800 border-zinc-700 font-content"
 						/>
