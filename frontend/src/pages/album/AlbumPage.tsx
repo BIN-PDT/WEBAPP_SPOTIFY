@@ -126,7 +126,7 @@ const AlbumPage = () => {
 												{index + 1}
 											</span>
 										)}
-										{!isCurrentSong && (
+										{(!isPlayed || !isCurrentSong) && (
 											<Play className="size-4 hidden group-hover:block" />
 										)}
 									</div>
