@@ -28,12 +28,14 @@ export const getStats = async (req, res, next) => {
 				]),
 			]);
 
-		return new APIResponse(200).setData({
-			totalUsers,
-			totalSongs,
-			totalAlbums,
-			totalArtists: uniqueArtists[0]?.count || 0,
-		});
+		return new APIResponse(200)
+			.setData({
+				totalUsers,
+				totalSongs,
+				totalAlbums,
+				totalArtists: uniqueArtists[0]?.count || 0,
+			})
+			.send(res);
 	} catch (error) {
 		next(error);
 	}
