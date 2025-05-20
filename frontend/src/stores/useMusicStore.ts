@@ -22,6 +22,7 @@ interface MusicStore {
 	fetchTrendingSongs: (signal: AbortSignal) => Promise<void>;
 	fetchStats: () => Promise<void>;
 	deleteSong: (id: string) => Promise<void>;
+	deleteAlbum: (id: string) => Promise<void>;
 }
 
 export const useMusicStore = create<MusicStore>((set) => ({
@@ -141,6 +142,24 @@ export const useMusicStore = create<MusicStore>((set) => ({
 			toastSuccess("Deleted song successfully.");
 		} catch (error: any) {
 			toastError("Deleted song unsuccessfully.");
+		} finally {
+			set({ isLoading: false });
+		}
+	},
+	deleteAlbum: async (id) => {
+		set({ isLoading: true, error: null });
+
+		try {
+			await axiosInstance.delete(`/admin/albums/${id}`);
+			set((state) => ({
+				albums: state.albums.filter((album) => album._id !== id),
+				songs: state.songs.map((song) =>
+					song.albumId === id ? { ...song, albumId: null } : song
+				),
+			}));
+			toastSuccess("Deleted album successfully.");
+		} catch (error: any) {
+			toastError("Deleted album unsuccessfully.");
 		} finally {
 			set({ isLoading: false });
 		}
