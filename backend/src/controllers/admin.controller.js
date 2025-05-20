@@ -1,3 +1,4 @@
+import fs from "fs";
 import APIResponse from "../common/APIResponse.js";
 import { Song } from "../models/song.model.js";
 import { Album } from "../models/album.model.js";
@@ -43,6 +44,13 @@ export const createSong = async (req, res, next) => {
 		return new APIResponse(201).setData({ song: newSong }).send(res);
 	} catch (error) {
 		next(error);
+	} finally {
+		fs.unlink(imageFile.tempFilePath, (error) => {
+			if (error) console.log(error);
+		});
+		fs.unlink(audioFile.tempFilePath, (error) => {
+			if (error) console.log(error);
+		});
 	}
 };
 
@@ -100,6 +108,10 @@ export const createAlbum = async (req, res, next) => {
 		return new APIResponse(201).setData({ album: newAlbum }).send(res);
 	} catch (error) {
 		next(error);
+	} finally {
+		fs.unlink(imageFile.tempFilePath, (error) => {
+			if (error) console.log(error);
+		});
 	}
 };
 
