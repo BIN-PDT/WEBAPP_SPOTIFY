@@ -116,7 +116,7 @@ export const deleteAlbum = async (req, res, next) => {
 				.send(res);
 		}
 		// DELETE SONGS OF ALBUM.
-		await Song.deleteMany({ albumId: existAlbum._id });
+		await Song.updateMany({ albumId: existAlbum._id }, { albumId: null });
 		// DELETE ALBUM.
 		await existAlbum.deleteOne();
 
