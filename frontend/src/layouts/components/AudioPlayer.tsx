@@ -1,7 +1,9 @@
 import { useEffect, useRef } from "react";
+import { useChatStore } from "@/stores/useChatStore";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 
 const AudioPlayer = () => {
+	const { update_activity } = useChatStore();
 	const { isPlaying, currentSong, playNext } = usePlayerStore();
 	const audioRef = useRef<HTMLAudioElement>(null);
 	const prevSongRef = useRef<string | null>(null);
@@ -38,6 +40,11 @@ const AudioPlayer = () => {
 			audioElement.currentTime = 0;
 			if (isPlaying) audioElement.play();
 		}
+		// UPDATE TO SOCKET.
+		const activity = isPlaying
+			? { title: currentSong.title, artist: currentSong.artist }
+			: null;
+		update_activity(activity);
 	}, [isPlaying, currentSong]);
 
 	return <audio ref={audioRef} />;

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { axiosInstance } from "@/lib/axios";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { handleAPIError } from "@/utils";
+import { useChatStore } from "@/stores/useChatStore";
 
 function updateAPIToken(token: string | null): void {
 	if (token) {
@@ -16,16 +17,21 @@ function updateAPIToken(token: string | null): void {
 }
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-	const { getToken } = useAuth();
-	const { checkAdminRole } = useAuthStore();
+	const { userId, getToken } = useAuth();
 	const [isLoading, setIsLoading] = useState(true);
+	const { checkAdminRole } = useAuthStore();
+	const { initializeSocket, disconnectSocket } = useChatStore();
 
 	useEffect(() => {
 		async function initAuth() {
 			try {
 				const token = await getToken();
 				updateAPIToken(token);
-				if (token) await checkAdminRole();
+
+				if (token && userId) {
+					await checkAdminRole();
+					initializeSocket(userId);
+				}
 			} catch (error) {
 				handleAPIError(error);
 				updateAPIToken(null);
@@ -35,7 +41,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 		}
 
 		initAuth();
-	}, []);
+
+		return () => disconnectSocket();
+	}, [userId]);
 
 	if (isLoading) {
 		return (
