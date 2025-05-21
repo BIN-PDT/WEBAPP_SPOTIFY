@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { Card, CardContent } from "@/components/ui/card";
 import { useUser } from "@clerk/clerk-react";
 import { axiosInstance } from "@/lib/axios";
+import { handleAPIError } from "@/utils";
 
 const AuthCallbackPage = () => {
 	const navigate = useNavigate();
@@ -20,7 +21,7 @@ const AuthCallbackPage = () => {
 					imageUrl: user.imageUrl,
 				});
 			} catch (error) {
-				console.log(error);
+				handleAPIError(error);
 			} finally {
 				navigate("/");
 			}

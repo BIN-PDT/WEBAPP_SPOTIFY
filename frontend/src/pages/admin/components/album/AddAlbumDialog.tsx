@@ -12,7 +12,7 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { useMusicStore } from "@/stores/useMusicStore";
-import { toastError, toastSuccess } from "@/utils";
+import { handleAPIError, toastError, toastSuccess } from "@/utils";
 
 interface AlbumInfo {
 	title: string;
@@ -71,7 +71,7 @@ const AddAlbumDialog = () => {
 
 			toastSuccess("Added album successfully.");
 		} catch (error: any) {
-			console.log(error);
+			handleAPIError(error);
 			toastError("Added album unsuccessfully.");
 		} finally {
 			setIsLoading(false);

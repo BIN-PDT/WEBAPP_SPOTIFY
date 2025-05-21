@@ -19,7 +19,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { useMusicStore } from "@/stores/useMusicStore";
-import { toastError, toastSuccess } from "@/utils";
+import { handleAPIError, toastError, toastSuccess } from "@/utils";
 
 interface SongInfo {
 	title: string;
@@ -97,7 +97,7 @@ const AddSongDialog = () => {
 
 			toastSuccess("Added song successfully.");
 		} catch (error: any) {
-			console.log(error);
+			handleAPIError(error);
 			toastError("Added song unsuccessfully.");
 		} finally {
 			setIsLoading(false);

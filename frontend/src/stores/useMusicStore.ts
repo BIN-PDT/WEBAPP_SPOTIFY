@@ -1,7 +1,7 @@
 import type { Album, Song, Stats } from "@/types";
 import { create } from "zustand";
 import { axiosInstance } from "@/lib/axios";
-import { toastError, toastSuccess } from "@/utils";
+import { handleAPIError, toastError, toastSuccess } from "@/utils";
 
 interface AdminAlbum {
 	_id: string;
@@ -57,7 +57,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 			const response = await axiosInstance.get("/songs");
 			set({ songs: response.data.data });
 		} catch (error: any) {
-			console.log(error);
+			handleAPIError(error);
 		} finally {
 			set({ isLoading: false });
 		}
@@ -69,7 +69,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 			const response = await axiosInstance.get("/albums");
 			set({ albums: response.data.data });
 		} catch (error: any) {
-			console.log(error);
+			handleAPIError(error);
 		} finally {
 			set({ isLoading: false });
 		}
@@ -81,7 +81,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 			const response = await axiosInstance.get(`/albums/${id}`);
 			set({ currentAlbum: response.data.data });
 		} catch (error: any) {
-			console.log(error);
+			handleAPIError(error);
 		} finally {
 			set({ isLoading: false });
 		}
@@ -95,7 +95,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 			});
 			set({ featuredSongs: response.data.data });
 		} catch (error: any) {
-			console.log(error);
+			handleAPIError(error);
 		} finally {
 			set({ isLoading: false });
 		}
@@ -109,7 +109,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 			});
 			set({ personalSongs: response.data.data });
 		} catch (error: any) {
-			console.log(error);
+			handleAPIError(error);
 		} finally {
 			set({ isLoading: false });
 		}
@@ -123,7 +123,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 			});
 			set({ trendingSongs: response.data.data });
 		} catch (error: any) {
-			console.log(error);
+			handleAPIError(error);
 		} finally {
 			set({ isLoading: false });
 		}
@@ -135,7 +135,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 			const response = await axiosInstance.get("/stats");
 			set({ stats: response.data.data });
 		} catch (error: any) {
-			console.log(error);
+			handleAPIError(error);
 		} finally {
 			set({ isLoading: false });
 		}
@@ -182,7 +182,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 
 			toastSuccess("Deleted song successfully.");
 		} catch (error: any) {
-			console.log(error);
+			handleAPIError(error);
 			toastError("Deleted song unsuccessfully.");
 		} finally {
 			set({ isLoading: false });
@@ -210,7 +210,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 
 			toastSuccess("Deleted album successfully.");
 		} catch (error: any) {
-			console.log(error);
+			handleAPIError(error);
 			toastError("Deleted album unsuccessfully.");
 		} finally {
 			set({ isLoading: false });

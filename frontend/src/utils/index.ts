@@ -31,3 +31,8 @@ export function toastSuccess(message: string) {
 export function toastError(message: string) {
 	toast.error(message, { className: "font-title" });
 }
+
+export function handleAPIError(error: any) {
+	const message = error.response?.data.message;
+	if (message) toastError(message);
+}

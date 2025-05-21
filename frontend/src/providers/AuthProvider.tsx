@@ -3,6 +3,7 @@ import { useAuth } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "@/lib/axios";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { handleAPIError } from "@/utils";
 
 function updateAPIToken(token: string | null): void {
 	if (token) {
@@ -26,7 +27,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 				updateAPIToken(token);
 				if (token) await checkAdminRole();
 			} catch (error) {
-				console.log(error);
+				handleAPIError(error);
 				updateAPIToken(null);
 			} finally {
 				setIsLoading(false);

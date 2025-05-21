@@ -1,6 +1,7 @@
 import type { User } from "@/types";
 import { create } from "zustand";
 import { axiosInstance } from "@/lib/axios";
+import { handleAPIError } from "@/utils";
 
 interface ChatSore {
 	isLoading: boolean;
@@ -20,7 +21,7 @@ export const useChatStore = create<ChatSore>((set) => ({
 			const response = await axiosInstance.get("/users");
 			set({ users: response.data.data });
 		} catch (error: any) {
-			console.log(error);
+			handleAPIError(error);
 		} finally {
 			set({ isLoading: false });
 		}
