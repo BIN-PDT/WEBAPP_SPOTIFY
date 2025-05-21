@@ -6,4 +6,6 @@ const router = Router();
 
 router.get("/", requireAuthenticated, controller.listUsers);
 
+router.get("/messages/:id", requireAuthenticated, controller.getMessages);
+
 export default router;

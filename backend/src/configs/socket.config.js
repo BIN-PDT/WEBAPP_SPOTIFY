@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
 import settings from "./settings.config.js";
+import { Message } from "../models/message.model.js";
 
 export function initializeSocket(server) {
 	const io = new Server(server, {
@@ -26,6 +27,22 @@ export function initializeSocket(server) {
 			userActivities.set(userId, activity);
 
 			io.emit("activity_updated", { userId, activity });
+		});
+
+		socket.on("send_message", async (data) => {
+			try {
+				const message = await Message.create(data);
+
+				const receiverSocketId = userSockets.get(message.receiverId);
+				if (receiverSocketId) {
+					io.to(receiverSocketId).emit("receive_message", message);
+				}
+
+				socket.emit("message_sent", message);
+			} catch (error) {
+				console.error(error);
+				socket.emit("message_error");
+			}
 		});
 
 		socket.on("disconnect", () => {
