@@ -2,9 +2,10 @@ import type { User } from "@/types";
 import { Socket } from "socket.io-client";
 import { create } from "zustand";
 import { axiosInstance } from "@/lib/axios";
+import { socketClient } from "@/lib/socket";
 import { handleAPIError } from "@/utils";
-import { socketClient, type SocketAuth } from "@/lib/socket";
 
+type SocketAuth = { userId: string | undefined };
 type UserActivity = { title: string; artist: string };
 
 interface ChatSore {
