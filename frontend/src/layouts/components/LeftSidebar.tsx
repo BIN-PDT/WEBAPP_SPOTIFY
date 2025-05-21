@@ -1,7 +1,7 @@
 import { HomeIcon, Library, MessageCircle } from "lucide-react";
 import { useEffect } from "react";
 import { Link } from "react-router";
-import { SignedIn } from "@clerk/clerk-react";
+import { SignedIn, useUser } from "@clerk/clerk-react";
 import { buttonVariants } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import EmptyContent from "@/components/EmptyContent";
@@ -11,6 +11,7 @@ import { useMusicStore } from "@/stores/useMusicStore";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 
 const LeftSidebar = () => {
+	const { user } = useUser();
 	const { isLoading, albums, fetchAlbums } = useMusicStore();
 	const { playedAlbumId } = usePlayerStore();
 
@@ -74,7 +75,13 @@ const LeftSidebar = () => {
 				) : albums.length === 0 ? (
 					<EmptyContent />
 				) : (
-					<ScrollArea className="h-[calc(100vh-270px)] md:h-[calc(100vh-320px)] px-4 my-4">
+					<ScrollArea
+						className={`h-[calc(100vh-270px)] px-4 my-4 ${
+							user
+								? "md:h-[calc(100vh-320px)]"
+								: "md:h-[calc(100vh-270px)]"
+						}`}
+					>
 						<div className="space-y-2">
 							{albums.map((album) => (
 								<Link
