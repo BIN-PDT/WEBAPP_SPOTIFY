@@ -2,7 +2,10 @@ import fs from "fs";
 import APIResponse from "../common/APIResponse.js";
 import { Song } from "../models/song.model.js";
 import { Album } from "../models/album.model.js";
-import { uploadToCloudinary } from "../utils/cloudinary.util.js";
+import {
+	removeOfCloudinary,
+	uploadToCloudinary,
+} from "../utils/cloudinary.util.js";
 
 export const checkAdmin = (req, res) => {
 	return new APIResponse(200).setData({ admin: true }).send(res);
@@ -22,15 +25,17 @@ export const createSong = async (req, res, next) => {
 
 	try {
 		// UPLOAD FILES TO MEIDA SERVER.
-		const audioUrl = await uploadToCloudinary(audioFile);
-		const imageUrl = await uploadToCloudinary(imageFile);
+		const [audioPid, audioUrl] = await uploadToCloudinary(audioFile);
+		const [imagePid, imageUrl] = await uploadToCloudinary(imageFile);
 		// CREATE NEW SONG.
 		const newSong = new Song({
 			title,
 			artist,
 			albumId,
 			duration,
+			audioPid,
 			audioUrl,
+			imagePid,
 			imageUrl,
 		});
 		await newSong.save();
@@ -70,6 +75,9 @@ export const deleteSong = async (req, res, next) => {
 				$pull: { songs: existSong._id },
 			});
 		}
+		// DELETE MEDIA FILES.
+		await removeOfCloudinary(existSong.audioPid, "video");
+		await removeOfCloudinary(existSong.imagePid, "image");
 		// DELETE SONG.
 		await existSong.deleteOne();
 
@@ -95,12 +103,13 @@ export const createAlbum = async (req, res, next) => {
 
 	try {
 		// UPLOAD FILES TO MEIDA SERVER.
-		const imageUrl = await uploadToCloudinary(imageFile);
+		const [imagePid, imageUrl] = await uploadToCloudinary(imageFile);
 		// CREATE NEW ALBUM.
 		const newAlbum = new Album({
 			title,
 			artist,
 			releaseYear,
+			imagePid,
 			imageUrl,
 		});
 		await newAlbum.save();
@@ -127,6 +136,8 @@ export const deleteAlbum = async (req, res, next) => {
 				.setMessage("Album not found.")
 				.send(res);
 		}
+		// DELETE MEDIA FILES.
+		await removeOfCloudinary(existAlbum.imagePid, "image");
 		// DELETE SONGS OF ALBUM.
 		await Song.updateMany({ albumId: existAlbum._id }, { albumId: null });
 		// DELETE ALBUM.

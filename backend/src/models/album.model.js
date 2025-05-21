@@ -10,6 +10,10 @@ const schema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
+		imagePid: {
+			type: String,
+			required: true,
+		},
 		imageUrl: {
 			type: String,
 			required: true,
