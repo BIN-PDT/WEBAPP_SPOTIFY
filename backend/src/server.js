@@ -7,6 +7,7 @@ import settings from "./configs/settings.config.js";
 import { frontendCORS } from "./configs/cors.config.js";
 import { connectDatabase } from "./configs/database.config.js";
 import { initializeSocket } from "./configs/socket.config.js";
+import connectFrontend from "./configs/frontend.config.js";
 import router from "./routes/index.route.js";
 
 const __dirname = path.resolve();
@@ -31,6 +32,7 @@ app.use(
 );
 
 app.use("/api", router);
+if (process.env.NODE_ENV === "production") connectFrontend(app);
 
 httpServer.listen(settings.PORT, async () => {
 	console.log(`Server is running on port ${settings.PORT}.`);
