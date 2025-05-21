@@ -19,7 +19,6 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { useMusicStore } from "@/stores/useMusicStore";
-import { axiosInstance } from "@/lib/axios";
 import { toastError, toastSuccess } from "@/utils";
 
 interface SongInfo {
@@ -35,7 +34,7 @@ interface SongFiles {
 }
 
 const AddSongDialog = () => {
-	const { albums } = useMusicStore();
+	const { albums, createSong } = useMusicStore();
 
 	const [isOpened, setIsOpened] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
@@ -76,25 +75,22 @@ const AddSongDialog = () => {
 
 	const handleSubmit = async () => {
 		setIsLoading(true);
+
+		if (!files.audio || !files.image) {
+			toastError("Require both audio and image files.");
+			return;
+		}
+
+		const formData = new FormData();
+		formData.append("title", data.title);
+		formData.append("artist", data.artist);
+		formData.append("duration", data.duration);
+		if (data.album !== "none") formData.append("albumId", data.album);
+		formData.append("audioFile", files.audio);
+		formData.append("imageFile", files.image);
+
 		try {
-			if (!files.audio || !files.image) {
-				toastError("Require both audio and image files.");
-				return;
-			}
-
-			const formData = new FormData();
-			formData.append("title", data.title);
-			formData.append("artist", data.artist);
-			formData.append("duration", data.duration);
-			if (data.album !== "none") {
-				formData.append("albumId", data.album);
-			}
-			formData.append("audioFile", files.audio);
-			formData.append("imageFile", files.image);
-
-			await axiosInstance.post("/admin/songs", formData, {
-				headers: { "Content-Type": "multipart/form-data" },
-			});
+			await createSong(formData);
 
 			setData({ title: "", artist: "", album: "none", duration: "0" });
 			setFiles({ audio: null, image: null });

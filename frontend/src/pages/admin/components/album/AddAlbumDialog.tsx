@@ -11,7 +11,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { axiosInstance } from "@/lib/axios";
+import { useMusicStore } from "@/stores/useMusicStore";
 import { toastError, toastSuccess } from "@/utils";
 
 interface AlbumInfo {
@@ -25,6 +25,7 @@ interface AlbumFile {
 }
 
 const AddAlbumDialog = () => {
+	const { createAlbum } = useMusicStore();
 	const [isOpened, setIsOpened] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const imageInputRef = useRef<HTMLInputElement>(null);
@@ -46,21 +47,20 @@ const AddAlbumDialog = () => {
 
 	const handleSubmit = async () => {
 		setIsLoading(true);
+
+		if (!file.image) {
+			toastError("Require an image file.");
+			return;
+		}
+
+		const formData = new FormData();
+		formData.append("title", data.title);
+		formData.append("artist", data.artist);
+		formData.append("releaseYear", data.releaseYear);
+		formData.append("imageFile", file.image);
+
 		try {
-			if (!file.image) {
-				toastError("Require an image file.");
-				return;
-			}
-
-			const formData = new FormData();
-			formData.append("title", data.title);
-			formData.append("artist", data.artist);
-			formData.append("releaseYear", data.releaseYear);
-			formData.append("imageFile", file.image);
-
-			await axiosInstance.post("/admin/albums", formData, {
-				headers: { "Content-Type": "multipart/form-data" },
-			});
+			await createAlbum(formData);
 
 			setData({
 				title: "",
