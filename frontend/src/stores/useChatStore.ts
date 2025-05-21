@@ -1,9 +1,9 @@
-import type { User } from "@/types";
+import type { Message, User } from "@/types";
 import { Socket } from "socket.io-client";
 import { create } from "zustand";
 import { axiosInstance } from "@/lib/axios";
 import { socketClient } from "@/lib/socket";
-import { handleAPIError } from "@/utils";
+import { handleAPIError, toastError } from "@/utils";
 
 type SocketAuth = { userId: string | undefined };
 type UserActivity = { title: string; artist: string };
@@ -15,11 +15,20 @@ interface ChatSore {
 	isConnected: boolean;
 	onlineUsers: Set<string>;
 	userActivities: Map<string, UserActivity | null>;
+	messages: Message[];
+	selectedUser: User | null;
 
 	initializeSocket: (userId: string) => void;
 	disconnectSocket: () => void;
 	update_activity: (activity: UserActivity | null) => void;
+	sendMessage: (
+		senderId: string,
+		receiverId: string,
+		content: string
+	) => void;
 	fetchUsers: () => Promise<void>;
+	fetchMessages: (userId: string) => Promise<void>;
+	setSelectedUser: (user: User) => void;
 }
 
 export const useChatStore = create<ChatSore>((set, get) => ({
@@ -29,6 +38,8 @@ export const useChatStore = create<ChatSore>((set, get) => ({
 	isConnected: false,
 	onlineUsers: new Set(),
 	userActivities: new Map(),
+	messages: [],
+	selectedUser: null,
 
 	initializeSocket: (userId) => {
 		const { socket, isConnected } = get();
@@ -74,6 +85,22 @@ export const useChatStore = create<ChatSore>((set, get) => ({
 			});
 		});
 
+		socket.on("receive_message", (message: Message) => {
+			set((state) => ({
+				messages: [...state.messages, message],
+			}));
+		});
+
+		socket.on("message_sent", (message: Message) => {
+			set((state) => ({
+				messages: [...state.messages, message],
+			}));
+		});
+
+		socket.on("message_error", () => {
+			toastError("Sent message unsuccessfully.");
+		});
+
 		set({ isConnected: true });
 	},
 	disconnectSocket: () => {
@@ -90,6 +117,12 @@ export const useChatStore = create<ChatSore>((set, get) => ({
 		const { userId } = socket.auth as SocketAuth;
 		if (userId) socket.emit("update_activity", { userId, activity });
 	},
+	sendMessage: async (senderId, receiverId, content) => {
+		const { socket, isConnected } = get();
+		if (!isConnected) return;
+
+		socket.emit("send_message", { senderId, receiverId, content });
+	},
 	fetchUsers: async () => {
 		set({ isLoading: true });
 
@@ -101,5 +134,24 @@ export const useChatStore = create<ChatSore>((set, get) => ({
 		} finally {
 			set({ isLoading: false });
 		}
+	},
+	fetchMessages: async (userId: string) => {
+		set({ isLoading: true });
+
+		try {
+			const response = await axiosInstance.get(
+				`/users/messages/${userId}`
+			);
+			set({ messages: response.data.data });
+		} catch (error: any) {
+			handleAPIError(error);
+		} finally {
+			set({ isLoading: false });
+		}
+	},
+	setSelectedUser: (user) => {
+		const { selectedUser } = get();
+
+		set({ selectedUser: selectedUser?._id !== user._id ? user : null });
 	},
 }));

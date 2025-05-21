@@ -7,6 +7,14 @@ export function formatDuration(seconds: number) {
 	return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
 }
 
+export function formatTime(date: string) {
+	return new Date(date).toLocaleTimeString("en-US", {
+		hour: "2-digit",
+		minute: "2-digit",
+		hour12: true,
+	});
+}
+
 export function getGreeting(): [React.ElementType, string] {
 	const hour = new Date().getHours();
 	if (hour >= 5 && hour < 12) return [Sun, "Good Morning"];
