@@ -28,7 +28,7 @@ export function initializeSocket(server) {
 			io.emit("activity_updated", { userId, activity });
 		});
 
-		socket.on("disconect", () => {
+		socket.on("disconnect", () => {
 			for (const [userId, socketId] of userSockets.entries()) {
 				if (socketId === socket.id) {
 					userSockets.delete(userId);
