@@ -74,29 +74,37 @@ const FriendsActivity = () => {
 													<Headphones className="size-3.5 text-emerald-400 shrink-0" />
 												)}
 											</div>
-											{/* SONG INFO */}
+											{/* ACTIVITY */}
 											<div className="mt-1">
-												{isPlaying ? (
-													<div className="flex items-center gap-3">
-														<div className="flex items-center gap-1 w-1/3">
-															<ListMusic className="size-4 flex-shrink-0" />
-															<span className="text-sm text-white truncate">
-																{activity.title}
-															</span>
-														</div>
+												{isOnline ? (
+													isPlaying ? (
+														<div className="flex items-center gap-3">
+															<div className="flex items-center gap-1 w-1/3">
+																<ListMusic className="size-4 flex-shrink-0" />
+																<span className="text-sm text-white truncate">
+																	{
+																		activity.title
+																	}
+																</span>
+															</div>
 
-														<div className="flex items-center gap-1 w-1/3">
-															<MicVocal className="size-4 flex-shrink-0" />
-															<span className="text-xs text-zinc-400 truncate">
-																{
-																	activity.artist
-																}
-															</span>
+															<div className="flex items-center gap-1 w-1/3">
+																<MicVocal className="size-4 flex-shrink-0" />
+																<span className="text-xs text-zinc-400 truncate">
+																	{
+																		activity.artist
+																	}
+																</span>
+															</div>
 														</div>
-													</div>
+													) : (
+														<div className="text-xs text-zinc-400">
+															Idle
+														</div>
+													)
 												) : (
 													<div className="text-xs text-zinc-400">
-														Idle
+														Offline
 													</div>
 												)}
 											</div>
