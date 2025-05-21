@@ -4,7 +4,6 @@ import { axiosInstance } from "@/lib/axios";
 
 interface ChatSore {
 	isLoading: boolean;
-	error: string | null;
 	users: User[];
 
 	fetchUsers: () => Promise<void>;
@@ -12,17 +11,16 @@ interface ChatSore {
 
 export const useChatStore = create<ChatSore>((set) => ({
 	isLoading: false,
-	error: null,
 	users: [],
 
 	fetchUsers: async () => {
-		set({ isLoading: true, error: null });
+		set({ isLoading: true });
 
 		try {
 			const response = await axiosInstance.get("/users");
 			set({ users: response.data.data });
 		} catch (error: any) {
-			set({ error: error.response.data.message });
+			console.log(error);
 		} finally {
 			set({ isLoading: false });
 		}
