@@ -23,6 +23,7 @@ interface MusicStore {
 	createSong: (data: FormData) => Promise<void>;
 	deleteSong: (id: string, albumId: string | null) => Promise<void>;
 	createAlbum: (data: FormData) => Promise<void>;
+	updateAlbum: (id: string, data: FormData) => Promise<void>;
 	deleteAlbum: (id: string) => Promise<void>;
 }
 
@@ -188,6 +189,20 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		const newAlbum: AdminAlbum = response.data.data.album;
 
 		set((state) => ({ albums: [newAlbum, ...state.albums] }));
+	},
+	updateAlbum: async (id, data) => {
+		const response = await axiosInstance.patch(
+			`/admin/albums/${id}`,
+			data,
+			{ headers: { "Content-Type": "multipart/form-data" } }
+		);
+		const updatedAlbum: AdminAlbum = response.data.data.album;
+
+		set((state) => ({
+			albums: state.albums.map((album) =>
+				album._id === id ? updatedAlbum : album
+			),
+		}));
 	},
 	deleteAlbum: async (id) => {
 		set({ isLoading: true });
