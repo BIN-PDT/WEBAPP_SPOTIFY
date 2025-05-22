@@ -48,18 +48,18 @@ const AddAlbumDialog = () => {
 	const handleSubmit = async () => {
 		setIsLoading(true);
 
-		if (!file.image) {
-			toastError("Require an image file.");
-			return;
-		}
-
-		const formData = new FormData();
-		formData.append("title", data.title);
-		formData.append("artist", data.artist);
-		formData.append("releaseYear", data.releaseYear);
-		formData.append("imageFile", file.image);
-
 		try {
+			if (!file.image) {
+				toastError("Require an image file.");
+				return;
+			}
+
+			const formData = new FormData();
+			formData.append("title", data.title);
+			formData.append("artist", data.artist);
+			formData.append("releaseYear", data.releaseYear);
+			formData.append("imageFile", file.image);
+
 			await createAlbum(formData);
 
 			setData({

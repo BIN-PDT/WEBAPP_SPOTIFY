@@ -76,20 +76,20 @@ const AddSongDialog = () => {
 	const handleSubmit = async () => {
 		setIsLoading(true);
 
-		if (!files.audio || !files.image) {
-			toastError("Require both audio and image files.");
-			return;
-		}
-
-		const formData = new FormData();
-		formData.append("title", data.title);
-		formData.append("artist", data.artist);
-		formData.append("duration", data.duration);
-		if (data.album !== "none") formData.append("albumId", data.album);
-		formData.append("audioFile", files.audio);
-		formData.append("imageFile", files.image);
-
 		try {
+			if (!files.audio || !files.image) {
+				toastError("Require both audio and image files.");
+				return;
+			}
+
+			const formData = new FormData();
+			formData.append("title", data.title);
+			formData.append("artist", data.artist);
+			formData.append("duration", data.duration);
+			if (data.album !== "none") formData.append("albumId", data.album);
+			formData.append("audioFile", files.audio);
+			formData.append("imageFile", files.image);
+
 			await createSong(formData);
 
 			setData({ title: "", artist: "", album: "none", duration: "0" });
