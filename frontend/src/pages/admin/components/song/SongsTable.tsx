@@ -1,4 +1,4 @@
-import { Calendar, MicVocal, Trash2 } from "lucide-react";
+import { Calendar, Edit, MicVocal, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	Table,
@@ -8,10 +8,13 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import EditSongDialog from "./EditSongDialog";
 import { useMusicStore } from "@/stores/useMusicStore";
+import { useDashboardStore } from "@/stores/useDashboardStore";
 
 const SongsTable = () => {
 	const { songs, deleteSong } = useMusicStore();
+	const { setSelectedSong } = useDashboardStore();
 
 	return (
 		<Table>
@@ -65,6 +68,14 @@ const SongsTable = () => {
 								<Button
 									variant={"ghost"}
 									size={"icon"}
+									className="text-blue-400 hover:text-blue-300 hover:bg-blue-400/10"
+									onClick={() => setSelectedSong(song)}
+								>
+									<Edit className="size-4" />
+								</Button>
+								<Button
+									variant={"ghost"}
+									size={"icon"}
 									className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
 									onClick={() =>
 										deleteSong(song._id, song.albumId)
@@ -77,6 +88,8 @@ const SongsTable = () => {
 					</TableRow>
 				))}
 			</TableBody>
+
+			<EditSongDialog />
 		</Table>
 	);
 };

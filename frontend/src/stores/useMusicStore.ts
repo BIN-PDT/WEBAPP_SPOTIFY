@@ -21,6 +21,7 @@ interface MusicStore {
 	fetchTrendingSongs: (signal: AbortSignal) => Promise<void>;
 	fetchStats: (signal: AbortSignal) => Promise<void>;
 	createSong: (data: FormData) => Promise<void>;
+	updateSong: (id: string, data: FormData) => Promise<void>;
 	deleteSong: (id: string, albumId: string | null) => Promise<void>;
 	createAlbum: (data: FormData) => Promise<void>;
 	updateAlbum: (id: string, data: FormData) => Promise<void>;
@@ -150,6 +151,18 @@ export const useMusicStore = create<MusicStore>((set) => ({
 				),
 			}));
 		}
+	},
+	updateSong: async (id, data) => {
+		const response = await axiosInstance.patch(`/admin/songs/${id}`, data, {
+			headers: { "Content-Type": "multipart/form-data" },
+		});
+		const updatedSong = response.data.data.song;
+
+		set((state) => ({
+			songs: state.songs.map((song) =>
+				song._id === id ? updatedSong : song
+			),
+		}));
 	},
 	deleteSong: async (id, albumId) => {
 		set({ isLoading: true });
