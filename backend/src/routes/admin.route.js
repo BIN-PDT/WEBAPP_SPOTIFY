@@ -17,6 +17,8 @@ router.delete("/songs/:id", controller.deleteSong);
 
 router.post("/albums", controller.createAlbum);
 
+router.patch("/albums/:id", controller.updateAlbum);
+
 router.delete("/albums/:id", controller.deleteAlbum);
 
 export default router;

@@ -124,6 +124,48 @@ export const createAlbum = async (req, res, next) => {
 	}
 };
 
+export const updateAlbum = async (req, res, next) => {
+	const {
+		params: { id },
+		files,
+		body,
+	} = req;
+	const data = { ...body };
+	const imageFile = files ? files.imageFile : null;
+
+	try {
+		const existAlbum = await Album.findById(id);
+		if (!existAlbum) {
+			return new APIResponse(404)
+				.setMessage("Album not found.")
+				.send(res);
+		}
+
+		if (imageFile) {
+			// DELETE OLD.
+			await removeOfCloudinary(existAlbum.imagePid, "image");
+			// UPLOAD NEW.
+			const [imagePid, imageUrl] = await uploadToCloudinary(imageFile);
+			data.imagePid = imagePid;
+			data.imageUrl = imageUrl;
+		}
+
+		const updatedAlbum = await Album.findByIdAndUpdate(id, data, {
+			new: true,
+		});
+
+		return new APIResponse(200).setData({ album: updatedAlbum }).send(res);
+	} catch (error) {
+		next(error);
+	} finally {
+		if (imageFile) {
+			fs.unlink(imageFile.tempFilePath, (error) => {
+				if (error) console.log(error);
+			});
+		}
+	}
+};
+
 export const deleteAlbum = async (req, res, next) => {
 	const {
 		params: { id },
