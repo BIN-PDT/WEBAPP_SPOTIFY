@@ -45,6 +45,21 @@ const AddAlbumDialog = () => {
 		imageSrcRef.current = file ? URL.createObjectURL(file) : "";
 	};
 
+	const validateData = () => {
+		if (!data.title) {
+			toastError("Title is required.");
+			return false;
+		}
+		if (!data.artist) {
+			toastError("Artist is required.");
+			return false;
+		}
+		if (!data.releaseYear) {
+			toastError("Release Year is required.");
+			return false;
+		}
+	};
+
 	const handleSubmit = async () => {
 		setIsLoading(true);
 
@@ -53,6 +68,7 @@ const AddAlbumDialog = () => {
 				toastError("Require an image file.");
 				return;
 			}
+			if (!validateData()) return;
 
 			const formData = new FormData();
 			formData.append("title", data.title);

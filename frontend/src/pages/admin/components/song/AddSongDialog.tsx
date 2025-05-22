@@ -73,6 +73,21 @@ const AddSongDialog = () => {
 		}
 	};
 
+	const validateData = () => {
+		if (!data.title) {
+			toastError("Title is required.");
+			return false;
+		}
+		if (!data.artist) {
+			toastError("Artist is required.");
+			return false;
+		}
+		if (!data.duration) {
+			toastError("Duration is required.");
+			return false;
+		}
+	};
+
 	const handleSubmit = async () => {
 		setIsLoading(true);
 
@@ -81,6 +96,7 @@ const AddSongDialog = () => {
 				toastError("Require both audio and image files.");
 				return;
 			}
+			if (!validateData()) return;
 
 			const formData = new FormData();
 			formData.append("title", data.title);
