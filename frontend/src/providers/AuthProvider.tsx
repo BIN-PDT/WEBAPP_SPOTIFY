@@ -28,9 +28,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 				const token = await getToken();
 				updateAPIToken(token);
 
-				if (token && userId) {
+				if (token) {
 					await checkAdminRole();
-					initializeSocket(userId);
+					if (userId) initializeSocket(userId);
 				}
 			} catch (error) {
 				handleAPIError(error);
