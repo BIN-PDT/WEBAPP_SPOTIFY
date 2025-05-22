@@ -8,6 +8,9 @@ const AudioPlayer = () => {
 	const audioRef = useRef<HTMLAudioElement>(null);
 	const prevSongRef = useRef<string | null>(null);
 
+	useEffect(() => {
+		return () => usePlayerStore.setState({ isPlaying: false });
+	}, []);
 	// HANDLE PLAY/PAUSE.
 	useEffect(() => {
 		const audioElement = audioRef.current;
