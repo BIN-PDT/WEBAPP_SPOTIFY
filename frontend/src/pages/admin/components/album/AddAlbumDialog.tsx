@@ -1,3 +1,4 @@
+import type { AlbumFile, AlbumInfo } from "@/types";
 import { Plus, Upload } from "lucide-react";
 import { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
@@ -13,16 +14,6 @@ import {
 } from "@/components/ui/dialog";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { handleAPIError, toastError, toastSuccess } from "@/utils";
-
-interface AlbumInfo {
-	title: string;
-	artist: string;
-	releaseYear: string;
-}
-
-interface AlbumFile {
-	image: File | null;
-}
 
 const AddAlbumDialog = () => {
 	const { createAlbum } = useMusicStore();

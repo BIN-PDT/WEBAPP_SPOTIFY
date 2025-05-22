@@ -17,6 +17,15 @@ export interface Song {
 	updatedAt: string;
 }
 
+export interface AdminAlbum {
+	_id: string;
+	title: string;
+	artist: string;
+	imageUrl: string;
+	releaseYear: number;
+	songs: string[];
+}
+
 export interface Album {
 	_id: string;
 	title: string;
@@ -40,4 +49,39 @@ export interface Message {
 	content: string;
 	createdAt: string;
 	updatedAt: string;
+}
+
+// DIALOG.
+
+export interface SongInfo {
+	title: string;
+	artist: string;
+	album: string;
+	duration: string;
+}
+
+export interface SongFiles {
+	audio: File | null;
+	image: File | null;
+}
+
+export interface AlbumInfo {
+	title: string;
+	artist: string;
+	releaseYear: string;
+}
+
+export interface AlbumFile {
+	image: File | null;
+}
+
+// SOCKET.
+
+export interface SocketAuth {
+	userId: string;
+}
+
+export interface UserActivity {
+	title: string;
+	artist: string;
 }

@@ -1,3 +1,4 @@
+import type { SongFiles, SongInfo } from "@/types";
 import { Plus, Upload } from "lucide-react";
 import { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
@@ -20,18 +21,6 @@ import {
 } from "@/components/ui/select";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { handleAPIError, toastError, toastSuccess } from "@/utils";
-
-interface SongInfo {
-	title: string;
-	artist: string;
-	album: string;
-	duration: string;
-}
-
-interface SongFiles {
-	audio: File | null;
-	image: File | null;
-}
 
 const AddSongDialog = () => {
 	const { albums, createSong } = useMusicStore();

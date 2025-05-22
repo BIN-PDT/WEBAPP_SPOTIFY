@@ -1,12 +1,9 @@
-import type { Message, User } from "@/types";
+import type { Message, SocketAuth, User, UserActivity } from "@/types";
 import { Socket } from "socket.io-client";
 import { create } from "zustand";
 import { axiosInstance } from "@/lib/axios";
 import { socketClient } from "@/lib/socket";
 import { handleAPIError, toastError } from "@/utils";
-
-type SocketAuth = { userId: string | undefined };
-type UserActivity = { title: string; artist: string };
 
 interface ChatSore {
 	isLoading: boolean;

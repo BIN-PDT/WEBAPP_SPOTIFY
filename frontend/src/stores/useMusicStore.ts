@@ -1,16 +1,7 @@
-import type { Album, Song, Stats } from "@/types";
+import type { AdminAlbum, Album, Song, Stats } from "@/types";
 import { create } from "zustand";
 import { axiosInstance } from "@/lib/axios";
 import { handleAPIError, toastError, toastSuccess } from "@/utils";
-
-interface AdminAlbum {
-	_id: string;
-	title: string;
-	artist: string;
-	imageUrl: string;
-	releaseYear: number;
-	songs: string[];
-}
 
 interface MusicStore {
 	isLoading: boolean;
