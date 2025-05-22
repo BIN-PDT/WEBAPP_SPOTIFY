@@ -86,6 +86,7 @@ const AddSongDialog = () => {
 			toastError("Duration is required.");
 			return false;
 		}
+		return true;
 	};
 
 	const handleSubmit = async () => {

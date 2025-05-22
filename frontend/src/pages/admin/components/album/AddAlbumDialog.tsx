@@ -58,6 +58,7 @@ const AddAlbumDialog = () => {
 			toastError("Release Year is required.");
 			return false;
 		}
+		return true;
 	};
 
 	const handleSubmit = async () => {
