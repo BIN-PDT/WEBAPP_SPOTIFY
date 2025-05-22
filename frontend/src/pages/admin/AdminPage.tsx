@@ -16,12 +16,20 @@ const AdminPage = () => {
 		useMusicStore();
 
 	useEffect(() => {
-		fetchSongs();
-		fetchAlbums();
+		const abortController = new AbortController();
+
+		fetchSongs(abortController.signal);
+		fetchAlbums(abortController.signal);
+
+		return () => abortController.abort();
 	}, []);
 
 	useEffect(() => {
-		fetchStats();
+		const abortController = new AbortController();
+
+		fetchStats(abortController.signal);
+
+		return () => abortController.abort();
 	}, [songs, albums]);
 
 	if (isLoading) return <AdminLoader />;

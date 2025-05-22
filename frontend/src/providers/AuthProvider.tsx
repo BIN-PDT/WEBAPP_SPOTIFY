@@ -23,13 +23,15 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 	const { initializeSocket, disconnectSocket } = useChatStore();
 
 	useEffect(() => {
+		const abortController = new AbortController();
+
 		async function initAuth() {
 			try {
 				const token = await getToken();
 				updateAPIToken(token);
 
 				if (token) {
-					await checkAdminRole();
+					await checkAdminRole(abortController.signal);
 					if (userId) initializeSocket(userId);
 				}
 			} catch (error) {
@@ -42,7 +44,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 		initAuth();
 
-		return () => disconnectSocket();
+		return () => {
+			abortController.abort();
+			disconnectSocket();
+		};
 	}, [userId]);
 
 	if (isLoading) {

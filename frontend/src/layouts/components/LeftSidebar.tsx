@@ -16,7 +16,11 @@ const LeftSidebar = () => {
 	const { playedAlbumId } = usePlayerStore();
 
 	useEffect(() => {
-		fetchAlbums();
+		const abortController = new AbortController();
+
+		fetchAlbums(abortController.signal);
+
+		return () => abortController.abort();
 	}, []);
 
 	return (

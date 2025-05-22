@@ -26,8 +26,8 @@ interface ChatSore {
 		receiverId: string,
 		content: string
 	) => void;
-	fetchUsers: () => Promise<void>;
-	fetchMessages: (userId: string) => Promise<void>;
+	fetchUsers: (signal: AbortSignal) => Promise<void>;
+	fetchMessages: (userId: string, signal: AbortSignal) => Promise<void>;
 	setSelectedUser: (user: User) => void;
 }
 
@@ -123,11 +123,11 @@ export const useChatStore = create<ChatSore>((set, get) => ({
 
 		socket.emit("send_message", { senderId, receiverId, content });
 	},
-	fetchUsers: async () => {
+	fetchUsers: async (signal) => {
 		set({ isLoading: true });
 
 		try {
-			const response = await axiosInstance.get("/users");
+			const response = await axiosInstance.get("/users", { signal });
 			set({ users: response.data.data });
 		} catch (error: any) {
 			handleAPIError(error);
@@ -135,12 +135,13 @@ export const useChatStore = create<ChatSore>((set, get) => ({
 			set({ isLoading: false });
 		}
 	},
-	fetchMessages: async (userId: string) => {
+	fetchMessages: async (userId, signal) => {
 		set({ isLoading: true });
 
 		try {
 			const response = await axiosInstance.get(
-				`/users/messages/${userId}`
+				`/users/messages/${userId}`,
+				{ signal }
 			);
 			set({ messages: response.data.data });
 		} catch (error: any) {

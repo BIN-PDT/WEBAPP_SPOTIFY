@@ -12,7 +12,11 @@ const FriendsActivity = () => {
 	const { user } = useUser();
 
 	useEffect(() => {
-		if (user) fetchUsers();
+		const abortController = new AbortController();
+
+		if (user) fetchUsers(abortController.signal);
+
+		return () => abortController.abort();
 	}, []);
 
 	return (

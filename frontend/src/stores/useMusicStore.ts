@@ -22,13 +22,13 @@ interface MusicStore {
 	trendingSongs: Song[];
 	stats: Stats;
 
-	fetchSongs: () => Promise<void>;
-	fetchAlbums: () => Promise<void>;
-	fetchAlbumById: (id: string) => Promise<void>;
+	fetchSongs: (signal: AbortSignal) => Promise<void>;
+	fetchAlbums: (signal: AbortSignal) => Promise<void>;
+	fetchAlbumById: (id: string, signal: AbortSignal) => Promise<void>;
 	fetchFeaturedSongs: (signal: AbortSignal) => Promise<void>;
 	fetchPersonalSongs: (signal: AbortSignal) => Promise<void>;
 	fetchTrendingSongs: (signal: AbortSignal) => Promise<void>;
-	fetchStats: () => Promise<void>;
+	fetchStats: (signal: AbortSignal) => Promise<void>;
 	createSong: (data: FormData) => Promise<void>;
 	deleteSong: (id: string, albumId: string | null) => Promise<void>;
 	createAlbum: (data: FormData) => Promise<void>;
@@ -50,11 +50,11 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		totalArtists: 0,
 	},
 
-	fetchSongs: async () => {
+	fetchSongs: async (signal) => {
 		set({ isLoading: true });
 
 		try {
-			const response = await axiosInstance.get("/songs");
+			const response = await axiosInstance.get("/songs", { signal });
 			set({ songs: response.data.data });
 		} catch (error: any) {
 			handleAPIError(error);
@@ -62,11 +62,11 @@ export const useMusicStore = create<MusicStore>((set) => ({
 			set({ isLoading: false });
 		}
 	},
-	fetchAlbums: async () => {
+	fetchAlbums: async (signal) => {
 		set({ isLoading: true });
 
 		try {
-			const response = await axiosInstance.get("/albums");
+			const response = await axiosInstance.get("/albums", { signal });
 			set({ albums: response.data.data });
 		} catch (error: any) {
 			handleAPIError(error);
@@ -74,11 +74,13 @@ export const useMusicStore = create<MusicStore>((set) => ({
 			set({ isLoading: false });
 		}
 	},
-	fetchAlbumById: async (id) => {
+	fetchAlbumById: async (id, signal) => {
 		set({ isLoading: true });
 
 		try {
-			const response = await axiosInstance.get(`/albums/${id}`);
+			const response = await axiosInstance.get(`/albums/${id}`, {
+				signal,
+			});
 			set({ currentAlbum: response.data.data });
 		} catch (error: any) {
 			handleAPIError(error);
@@ -128,11 +130,11 @@ export const useMusicStore = create<MusicStore>((set) => ({
 			set({ isLoading: false });
 		}
 	},
-	fetchStats: async () => {
+	fetchStats: async (signal) => {
 		set({ isLoading: true });
 
 		try {
-			const response = await axiosInstance.get("/stats");
+			const response = await axiosInstance.get("/stats", { signal });
 			set({ stats: response.data.data });
 		} catch (error: any) {
 			handleAPIError(error);

@@ -6,18 +6,20 @@ interface AuthStore {
 	isLoading: boolean;
 	isAdmin: boolean;
 
-	checkAdminRole: () => Promise<void>;
+	checkAdminRole: (signal: AbortSignal) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
 	isLoading: false,
 	isAdmin: false,
 
-	checkAdminRole: async () => {
+	checkAdminRole: async (signal) => {
 		set({ isLoading: true });
 
 		try {
-			const response = await axiosInstance.get("/admin/check");
+			const response = await axiosInstance.get("/admin/check", {
+				signal,
+			});
 			set({ isAdmin: response.data.data.admin });
 		} catch (error: any) {
 			const statusCode = error?.status;

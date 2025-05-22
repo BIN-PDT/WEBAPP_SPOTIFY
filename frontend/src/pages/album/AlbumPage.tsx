@@ -14,7 +14,11 @@ const AlbumPage = () => {
 		usePlayerStore();
 
 	useEffect(() => {
-		if (id) fetchAlbumById(id);
+		const abortController = new AbortController();
+
+		if (id) fetchAlbumById(id, abortController.signal);
+
+		return () => abortController.abort();
 	}, [id]);
 
 	useEffect(() => {

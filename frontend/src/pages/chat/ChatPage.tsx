@@ -16,11 +16,21 @@ const ChatPage = () => {
 		useChatStore();
 
 	useEffect(() => {
-		if (user) fetchUsers();
+		const abortController = new AbortController();
+
+		if (user) fetchUsers(abortController.signal);
+
+		return () => abortController.abort();
 	}, [user]);
 
 	useEffect(() => {
-		if (selectedUser) fetchMessages(selectedUser.clerkId);
+		const abortController = new AbortController();
+
+		if (selectedUser) {
+			fetchMessages(selectedUser.clerkId, abortController.signal);
+		}
+
+		return () => abortController.abort();
 	}, [selectedUser]);
 
 	return users.length === 0 ? (
