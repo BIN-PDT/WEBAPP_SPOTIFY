@@ -4,9 +4,10 @@ import "./index.css";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router";
 import { ClerkProvider } from "@clerk/clerk-react";
+import settings from "./lib/settings.ts";
 import AuthProvider from "./providers/AuthProvider.tsx";
 
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+const PUBLISHABLE_KEY = settings.CLERK_PUBLISHABLE_KEY;
 
 if (!PUBLISHABLE_KEY) {
 	throw new Error("Clerk - Missing PUBLISHABLE_KEY.");

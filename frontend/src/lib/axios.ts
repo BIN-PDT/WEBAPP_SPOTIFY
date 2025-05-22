@@ -1,5 +1,7 @@
 import axios from "axios";
+import settings from "./settings";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
-export const axiosInstance = axios.create({ baseURL: BACKEND_URL });
+export const axiosInstance = axios.create({
+	baseURL: settings.BACKEND_URL,
+	withCredentials: true,
+});
