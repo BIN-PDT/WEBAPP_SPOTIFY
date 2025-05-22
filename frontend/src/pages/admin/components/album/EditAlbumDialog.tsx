@@ -93,6 +93,7 @@ const EditAlbumDialog = () => {
 			await updateAlbum(selectedAlbum._id, formData);
 
 			toastSuccess("Updated album successfully.");
+			setIsOpened(false);
 		} catch (error: any) {
 			handleAPIError(error);
 			toastError("Updated album unsuccessfully.");
@@ -132,7 +133,7 @@ const EditAlbumDialog = () => {
 									<img
 										title={file.image.name}
 										src={imageSrcRef.current}
-										className="size-24 rounded-md"
+										className="size-24 rounded-md mx-auto"
 									/>
 									<p className="mt-2 text-white text-sm font-title translate-y-1/2">
 										{file.image.name}

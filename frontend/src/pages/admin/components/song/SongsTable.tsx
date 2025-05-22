@@ -1,4 +1,4 @@
-import { Calendar, Edit, MicVocal, Trash2 } from "lucide-react";
+import { Calendar, Edit, Library, MicVocal, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	Table,
@@ -13,7 +13,7 @@ import { useMusicStore } from "@/stores/useMusicStore";
 import { useDashboardStore } from "@/stores/useDashboardStore";
 
 const SongsTable = () => {
-	const { songs, deleteSong } = useMusicStore();
+	const { songs, albums, deleteSong } = useMusicStore();
 	const { setSelectedSong } = useDashboardStore();
 
 	return (
@@ -32,6 +32,12 @@ const SongsTable = () => {
 						<div className="flex items-center gap-2">
 							<Calendar className="size-4" />
 							Release Date
+						</div>
+					</TableHead>
+					<TableHead>
+						<div className="flex items-center gap-2">
+							<Library className="size-4" />
+							Album
 						</div>
 					</TableHead>
 					<TableHead className="text-right pr-[16px]">
@@ -60,6 +66,15 @@ const SongsTable = () => {
 						<TableCell>
 							<span className="inline-flex items-center gap-1 text-zinc-400">
 								{song.createdAt.split("T")[0]}
+							</span>
+						</TableCell>
+						<TableCell>
+							<span className="inline-flex items-center gap-1 text-zinc-400">
+								{
+									albums.find(
+										(album) => album._id === song.albumId
+									)?.title
+								}
 							</span>
 						</TableCell>
 

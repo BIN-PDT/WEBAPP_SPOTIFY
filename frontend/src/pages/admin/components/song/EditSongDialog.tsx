@@ -126,6 +126,7 @@ const EditSongDialog = () => {
 			await updateSong(selectedSong._id, formData);
 
 			toastSuccess("Updated song successfully.");
+			setIsOpened(false);
 		} catch (error: any) {
 			handleAPIError(error);
 			toastError("Updated song unsuccessfully.");
@@ -170,7 +171,7 @@ const EditSongDialog = () => {
 									<img
 										title={files.image.name}
 										src={imageSrcRef.current}
-										className="size-24 rounded-md"
+										className="size-24 rounded-md mx-auto"
 									/>
 									<p className="mt-2 text-white text-sm font-title translate-y-1/2">
 										{files.image.name}
