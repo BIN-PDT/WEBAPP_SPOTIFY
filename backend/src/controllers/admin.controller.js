@@ -59,6 +59,75 @@ export const createSong = async (req, res, next) => {
 	}
 };
 
+export const updateSong = async (req, res, next) => {
+	const {
+		params: { id },
+		files,
+		body,
+	} = req;
+	const data = { ...body };
+	const imageFile = files ? files.imageFile : null;
+	const audioFile = files ? files.audioFile : null;
+
+	try {
+		const existSong = await Song.findById(id);
+		if (!existSong) {
+			return new APIResponse(404)
+				.setMessage("Album not found.")
+				.send(res);
+		}
+
+		if (imageFile) {
+			// DELETE OLD.
+			await removeOfCloudinary(existSong.imagePid, "image");
+			// UPLOAD NEW.
+			const [imagePid, imageUrl] = await uploadToCloudinary(imageFile);
+			data.imagePid = imagePid;
+			data.imageUrl = imageUrl;
+		}
+		if (audioFile) {
+			// DELETE OLD.
+			await removeOfCloudinary(existSong.audioPid, "video");
+			// UPLOAD NEW.
+			const [audioPid, audioUrl] = await uploadToCloudinary(audioFile);
+			data.audioPid = audioPid;
+			data.audioUrl = audioUrl;
+		}
+		// UPDATE ALBUM (OPTIONAL).
+		if (data.albumId) {
+			data.albumId = data.albumId === "none" ? null : data.albumId;
+
+			await Album.findByIdAndUpdate(existSong.albumId, {
+				$pull: { songs: id },
+			});
+			if (data.albumId !== null) {
+				await Album.findByIdAndUpdate(data.albumId, {
+					$push: { songs: id },
+				});
+			}
+		}
+
+		const updateSong = await Song.findByIdAndUpdate(id, data, {
+			new: true,
+		});
+
+		return new APIResponse(200).setData({ song: updateSong }).send(res);
+	} catch (error) {
+		next(error);
+	} finally {
+		if (imageFile) {
+			fs.unlink(imageFile.tempFilePath, (error) => {
+				if (error) console.log(error);
+			});
+		}
+		if (audioFile) {
+			fs.unlink(audioFile.tempFilePath, (error) => {
+				if (error) console.log(error);
+			});
+		}
+	}
+};
+
 export const deleteSong = async (req, res, next) => {
 	const {
 		params: { id },

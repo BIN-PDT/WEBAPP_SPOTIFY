@@ -13,6 +13,8 @@ router.get("/check", controller.checkAdmin);
 
 router.post("/songs", controller.createSong);
 
+router.patch("/songs/:id", controller.updateSong);
+
 router.delete("/songs/:id", controller.deleteSong);
 
 router.post("/albums", controller.createAlbum);
