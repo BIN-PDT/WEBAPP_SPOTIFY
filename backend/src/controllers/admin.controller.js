@@ -39,7 +39,7 @@ export const createSong = async (req, res, next) => {
 			imageUrl,
 		});
 		await newSong.save();
-		// UPDATE ALBUM (OPTIONAL).
+		// UPDATE ALBUM.
 		if (albumId) {
 			await Album.findByIdAndUpdate(albumId, {
 				$push: { songs: newSong._id },
@@ -75,24 +75,20 @@ export const updateSong = async (req, res, next) => {
 				.setMessage("Album not found.")
 				.send(res);
 		}
-
+		// UPDATE MEDIA FILES.
 		if (imageFile) {
-			// DELETE OLD.
 			await removeOfCloudinary(existSong.imagePid, "image");
-			// UPLOAD NEW.
 			const [imagePid, imageUrl] = await uploadToCloudinary(imageFile);
 			data.imagePid = imagePid;
 			data.imageUrl = imageUrl;
 		}
 		if (audioFile) {
-			// DELETE OLD.
 			await removeOfCloudinary(existSong.audioPid, "video");
-			// UPLOAD NEW.
 			const [audioPid, audioUrl] = await uploadToCloudinary(audioFile);
 			data.audioPid = audioPid;
 			data.audioUrl = audioUrl;
 		}
-		// UPDATE ALBUM (OPTIONAL).
+		// UPDATE ALBUM OF SONG.
 		if (data.albumId) {
 			data.albumId = data.albumId === "none" ? null : data.albumId;
 
@@ -105,7 +101,7 @@ export const updateSong = async (req, res, next) => {
 				});
 			}
 		}
-
+		// UPDATE SONG.
 		const updateSong = await Song.findByIdAndUpdate(id, data, {
 			new: true,
 		});
@@ -137,15 +133,15 @@ export const deleteSong = async (req, res, next) => {
 		if (!existSong) {
 			return new APIResponse(404).setMessage("Song not found.").send(res);
 		}
-		// UPDATE ALBUM (OPTIONAL).
+		// DELETE MEDIA FILES.
+		await removeOfCloudinary(existSong.audioPid, "video");
+		await removeOfCloudinary(existSong.imagePid, "image");
+		// UPDATE ALBUM OF SONG.
 		if (existSong.albumId) {
 			await Album.findOneAndUpdate(existSong.albumId, {
 				$pull: { songs: existSong._id },
 			});
 		}
-		// DELETE MEDIA FILES.
-		await removeOfCloudinary(existSong.audioPid, "video");
-		await removeOfCloudinary(existSong.imagePid, "image");
 		// DELETE SONG.
 		await existSong.deleteOne();
 
@@ -207,16 +203,14 @@ export const updateAlbum = async (req, res, next) => {
 				.setMessage("Album not found.")
 				.send(res);
 		}
-
+		// UPDATE MEDIA FILES.
 		if (imageFile) {
-			// DELETE OLD.
 			await removeOfCloudinary(existAlbum.imagePid, "image");
-			// UPLOAD NEW.
 			const [imagePid, imageUrl] = await uploadToCloudinary(imageFile);
 			data.imagePid = imagePid;
 			data.imageUrl = imageUrl;
 		}
-
+		// UPDATE ALBUM.
 		const updatedAlbum = await Album.findByIdAndUpdate(id, data, {
 			new: true,
 		});
@@ -247,7 +241,7 @@ export const deleteAlbum = async (req, res, next) => {
 		}
 		// DELETE MEDIA FILES.
 		await removeOfCloudinary(existAlbum.imagePid, "image");
-		// DELETE SONGS OF ALBUM.
+		// UPDATE SONGS OF ALBUM.
 		await Song.updateMany({ albumId: existAlbum._id }, { albumId: null });
 		// DELETE ALBUM.
 		await existAlbum.deleteOne();
