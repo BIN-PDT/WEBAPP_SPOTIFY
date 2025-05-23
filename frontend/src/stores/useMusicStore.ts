@@ -163,6 +163,24 @@ export const useMusicStore = create<MusicStore>((set) => ({
 				song._id === id ? updatedSong : song
 			),
 		}));
+
+		const newAlbumId = data.get("albumId");
+		if (newAlbumId) {
+			set((state) => ({
+				albums: state.albums.map((album) => {
+					if (album.songs.includes(id)) {
+						album.songs = album.songs.filter(
+							(songId) => songId !== id
+						);
+					}
+					if (album._id === newAlbumId) {
+						album.songs = [...album.songs, id];
+					}
+
+					return album;
+				}),
+			}));
+		}
 	},
 	deleteSong: async (id, albumId) => {
 		set({ isLoading: true });
