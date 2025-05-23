@@ -62,12 +62,11 @@ export const createSong = async (req, res, next) => {
 export const updateSong = async (req, res, next) => {
 	const {
 		params: { id },
+		body: data = {},
 		files,
-		body,
 	} = req;
-	const data = { ...body };
-	const imageFile = files ? files.imageFile : null;
-	const audioFile = files ? files.audioFile : null;
+	const imageFile = files?.imageFile;
+	const audioFile = files?.audioFile;
 
 	try {
 		const existSong = await Song.findById(id);
@@ -196,11 +195,10 @@ export const createAlbum = async (req, res, next) => {
 export const updateAlbum = async (req, res, next) => {
 	const {
 		params: { id },
+		body: data = {},
 		files,
-		body,
 	} = req;
-	const data = { ...body };
-	const imageFile = files ? files.imageFile : null;
+	const imageFile = files?.imageFile;
 
 	try {
 		const existAlbum = await Album.findById(id);
