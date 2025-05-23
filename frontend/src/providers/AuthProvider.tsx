@@ -1,42 +1,29 @@
 import { Loader } from "lucide-react";
 import { useAuth } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
-import { axiosInstance } from "@/lib/axios";
+import { attachAuthInterceptor, detachAuthInterceptor } from "@/lib/axios";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { handleAPIError } from "@/utils";
 import { useChatStore } from "@/stores/useChatStore";
-
-function updateAPIToken(token: string | null): void {
-	if (token) {
-		axiosInstance.defaults.headers.common[
-			"Authorization"
-		] = `Bearer ${token}`;
-	} else {
-		delete axiosInstance.defaults.headers.common["Authorization"];
-	}
-}
+import { handleAPIError } from "@/utils";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-	const { userId, getToken } = useAuth();
-	const [isLoading, setIsLoading] = useState(true);
+	const { isSignedIn, userId, getToken } = useAuth();
 	const { checkAdminRole } = useAuthStore();
 	const { initializeSocket, disconnectSocket } = useChatStore();
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
+		const interceptorId = attachAuthInterceptor(getToken);
 		const abortController = new AbortController();
 
 		async function initAuth() {
 			try {
-				const token = await getToken();
-				updateAPIToken(token);
-
-				if (token) {
+				if (isSignedIn) {
 					await checkAdminRole(abortController.signal);
 					if (userId) initializeSocket(userId);
 				}
 			} catch (error) {
 				handleAPIError(error);
-				updateAPIToken(null);
 			} finally {
 				setIsLoading(false);
 			}
@@ -45,10 +32,13 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 		initAuth();
 
 		return () => {
-			abortController.abort();
-			disconnectSocket();
+			detachAuthInterceptor(interceptorId);
+			if (isSignedIn) {
+				abortController.abort();
+				disconnectSocket();
+			}
 		};
-	}, [userId]);
+	}, [isSignedIn]);
 
 	if (isLoading) {
 		return (
