@@ -19,4 +19,11 @@ const schema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
+schema.set("toJSON", {
+	transform: function (doc, ret) {
+		delete ret.__v;
+		return ret;
+	},
+});
+
 export const User = mongoose.model("User", schema);
