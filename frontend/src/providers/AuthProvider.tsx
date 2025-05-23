@@ -38,7 +38,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 				disconnectSocket();
 			}
 		};
-	}, [isSignedIn]);
+	}, [isSignedIn, userId]);
 
 	if (isLoading) {
 		return (

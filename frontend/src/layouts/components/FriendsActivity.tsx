@@ -17,7 +17,7 @@ const FriendsActivity = () => {
 		if (user) fetchUsers(abortController.signal);
 
 		return () => abortController.abort();
-	}, []);
+	}, [user]);
 
 	return (
 		<div className="h-full bg-zinc-900 rounded-lg flex flex-col">

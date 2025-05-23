@@ -10,8 +10,14 @@ const AlbumPage = () => {
 	const { id } = useParams();
 	const [isPlayed, setIsPlayed] = useState(false);
 	const { isLoading, currentAlbum, fetchAlbumById } = useMusicStore();
-	const { isPlaying, currentSong, playedAlbumId, playAlbum, togglePlay } =
-		usePlayerStore();
+	const {
+		isPlaying,
+		currentSong,
+		playedAlbumId,
+		setPlayedAlbum,
+		playAlbum,
+		togglePlay,
+	} = usePlayerStore();
 
 	useEffect(() => {
 		const abortController = new AbortController();
@@ -32,7 +38,7 @@ const AlbumPage = () => {
 		if (isPlayed) togglePlay();
 		else {
 			playAlbum(currentAlbum.songs, 0);
-			usePlayerStore.setState({ playedAlbumId: currentAlbum._id });
+			setPlayedAlbum(currentAlbum._id);
 		}
 	};
 
@@ -40,7 +46,7 @@ const AlbumPage = () => {
 		if (!currentAlbum) return;
 
 		playAlbum(currentAlbum.songs, index);
-		usePlayerStore.setState({ playedAlbumId: currentAlbum._id });
+		setPlayedAlbum(currentAlbum._id);
 	};
 
 	if (isLoading) return null;

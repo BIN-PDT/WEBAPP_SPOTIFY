@@ -15,6 +15,8 @@ interface PlayerStore {
 	initializeQueue: (songs: Song[]) => void;
 	playAlbum: (songs: Song[], startIndex?: number) => void;
 	playSong: (song: Song) => void;
+	setPlayedAlbum: (id: string) => void;
+	stopPlay: () => void;
 	togglePlay: () => void;
 	playNext: (audio: HTMLAudioElement | null) => void;
 	playPrev: (audio: HTMLAudioElement | null) => void;
@@ -72,6 +74,12 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
 			playedAlbumId: null,
 			isShuffled: false,
 		});
+	},
+	setPlayedAlbum: (id) => {
+		set({ playedAlbumId: id });
+	},
+	stopPlay: () => {
+		set({ isPlaying: false });
 	},
 	togglePlay: () => {
 		const { isPlaying } = get();

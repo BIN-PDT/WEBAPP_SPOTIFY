@@ -4,12 +4,13 @@ import { usePlayerStore } from "@/stores/usePlayerStore";
 
 const AudioPlayer = () => {
 	const { update_activity } = useChatStore();
-	const { isPlaying, currentSong, playNext } = usePlayerStore();
+	const { isPlaying, currentSong, stopPlay, playNext } = usePlayerStore();
 	const audioRef = useRef<HTMLAudioElement>(null);
 	const prevSongRef = useRef<string | null>(null);
 
+	// HANDLE STOP SONG.
 	useEffect(() => {
-		return () => usePlayerStore.setState({ isPlaying: false });
+		return () => stopPlay();
 	}, []);
 	// HANDLE PLAY/PAUSE.
 	useEffect(() => {
