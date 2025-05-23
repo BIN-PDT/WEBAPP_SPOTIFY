@@ -149,7 +149,7 @@ export const deleteSong = async (req, res, next) => {
 		// DELETE SONG.
 		await existSong.deleteOne();
 
-		return new APIResponse(200)
+		return new APIResponse(204)
 			.setMessage("Deleted song successfully.")
 			.send(res);
 	} catch (error) {
@@ -252,7 +252,7 @@ export const deleteAlbum = async (req, res, next) => {
 		// DELETE ALBUM.
 		await existAlbum.deleteOne();
 
-		return new APIResponse(200)
+		return new APIResponse(204)
 			.setMessage("Deleted album successfully.")
 			.send(res);
 	} catch (error) {
